@@ -1,0 +1,60 @@
+extends layout
+
+block content
+	header
+		.navbar.navbar-default(role="navigation")
+			.navbar-header
+				button.navbar-toggle(type="button", data-toggle="collapse", data-target="#bs-example-navbar-collapse-1") Button
+					span.sr-only Toggle navigation
+					span.icon-bar
+					span.icon-bar
+					span.icon-bar
+				a.navbar-brand(href="#") Brand
+			.collapse.navbar-collapse#bs-example-navbar-collapse-1
+				ul.nav.navbar-nav
+					li.active
+						a(href="#") Link
+					li
+						a(href="#") Link
+					li.dropdown
+						a.dropdown-toggle(href="#", data-toggle="dropdown") Dropdown 
+							b.caret
+					ul.dropdown-menu
+						li
+							a(href="#") Action
+							a(href="#") Another Action
+							a(href="#") And another Action
+						li.divider
+						li
+							a(href="#") Separated link
+						li.divider
+						li
+							a(href="#") Another Separated link
+					form.navbar-form.navbar-left(role="search")
+						.form-group
+							input.form-control(type="text", placeholder="Search")
+						button.btn.btn-default(type="submit") Submit
+					ul.nav.navbar-nav.navbar-right
+						li
+							a(href="#") Link
+						li.dropdown
+							a.dropdown-toggle(href="#", data-toggle="dropdown") Dropdown
+							b.caret
+							ul.dropdown-menu
+								li
+									a(href="#") Action
+									a(href="#") Another Action
+									a(href="#") And another Action
+								li.divider
+								li
+									a(href="#") Separated link
+	.container.jumbotron.col-md-6
+		h1 Request Help!
+		p.lead Do you need some help...
+	.container
+		form.form-horizontal(role="form").col-md-6
+			.form-group
+				label.control-label(for="issueText") Describe your issue
+				textarea.form-control(rows="3", placeholder="Issue?")
+			.form-group
+				button.btn.btn-lg.btn-primary Click Here!
