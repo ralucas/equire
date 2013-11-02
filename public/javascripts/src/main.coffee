@@ -14,4 +14,12 @@ $ () ->
 
 
 		return
+	
+	$('#teacherinput').on 'submit', $('#lesson-plan'), (e) ->
+		e.preventDefault()
+		lessonplan = $(@).find('#lessonplan').val()
+		if lessonplan then $(@).closest('#teacherinput').slideUp() else alert 'Please enter a lesson plan'
+
+		return
+
 	return

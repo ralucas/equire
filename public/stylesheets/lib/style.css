@@ -8,3 +8,27 @@ a {
 #user-dropdown {
   float: right;
 }
+#teacherinput h1,
+p {
+  text-align: center;
+}
+#teacherinput {
+  width: 50%;
+}
+.help-block {
+  text-align: left;
+}
+#tchr-sub-btn {
+  text-align: center;
+}
+#issueinput {
+  width: 50%;
+}
+#now-btn {
+  margin: 2%;
+  text-align: center;
+}
+#now-btn button {
+  width: 50%;
+  height: 100px;
+}

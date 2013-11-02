@@ -39,25 +39,30 @@ block content
 								li.divider
 								li <a href="#">Separated link</a>
 					ul.nav.navbar-nav.navbar-right
-						li.dropdown#user-dropdown <a href="#{user._id}" data-toggle="dropdown" class="navbar-link pull-right">#{user.displayName}<b class="caret"></b></a>
+						li.dropdown#user-dropdown <a href="#" data-toggle="dropdown" class="navbar-link pull-right"><b class="caret"></b></a>
 							ul.dropdown-menu
 								li <a href="#">Action</a>
 								li <a href="#">Action</a>
 								li <a href="#">Action</a>
 								li.divider
 								li <a href="#">Separated link</a>
-	.container#now-btn
-		h1 Greetings #{user.displayName}
-		button.btn.btn-lg.btn-success.animated.flash.tada Request help right now
-	.container#issueinput
-		form.form-horizontal#help-form(role="form")
-			p.lead We'd love for you to tell us about your issue
-			.form-group
-				label.control-label(for="issueText") Describe your issue
-				textarea.form-control#issue(rows="3", name="issue", placeholder="Issue?")
-			.form-group
-				button.btn.btn-lg.btn-primary#submit-btn Click Here!
-
+	.container#teacherinput
+		.row
+			h1 Welcome teacher
+			p.lead Please input today's lesson
+			form(role="form")#lesson-plan
+				.form-group
+					label(for="inputLesson") Lesson
+					input.form-control#lessonplan(type="text", placeholder="Enter lesson")
+				.form-group
+					label(for="inputFile") Upload Lesson plan
+					input#inputFile(type="file")
+					p.help-block JSON format preferred or .docx, .pdf, .odt, .xls
+				.checkbox
+					label Check box
+					input(type="checkbox")
+				button.btn.btn-primary.btn-lg#tchr-sub-btn(type="submit") Submit
+	.container#helprequests
 
 	script(src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js")
 	script(src="//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js")

@@ -14,6 +14,16 @@
       socket.emit('newIssue', newIssue);
       $('#issue').val('');
     });
+    $('#teacherinput').on('submit', $('#lesson-plan'), function(e) {
+      var lessonplan;
+      e.preventDefault();
+      lessonplan = $(this).find('#lessonplan').val();
+      if (lessonplan) {
+        $(this).closest('#teacherinput').slideUp();
+      } else {
+        alert('Please enter a lesson plan');
+      }
+    });
   });
 
 }).call(this);

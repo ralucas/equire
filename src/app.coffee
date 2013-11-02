@@ -45,7 +45,7 @@ mongoose.connect 'mongodb://localhost'
 IssueSchema = new mongoose.Schema {
 	issue: String,
 	time: Object,
-	user: String
+	displayName: {type: String, ref: 'User'}
 }
 
 Issue = mongoose.model 'Issue', IssueSchema
@@ -91,7 +91,7 @@ io.sockets.on 'connection', (socket) ->
 	###
 	socket.on 'newIssue', (newIssue) ->
 		console.log newIssue
-		
+		console.log 'socket', current_user
 		issue = new Issue({
 			issue: newIssue,
 			time: new Date()
@@ -106,6 +106,7 @@ app.get '/', (req, res) ->
 	res.render 'login', {user: req.user}
 
 app.get '/student', (req, res) ->
+	current_user = req.user
 	res.render 'index', {user: req.user}
 
 app.get '/auth/google', passport.authenticate 'google'
