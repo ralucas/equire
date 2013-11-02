@@ -1,60 +1,65 @@
 extends layout
 
 block content
-	header
-		.navbar.navbar-default(role="navigation")
+	header.navbar.navbar-default.navbar-fixed-top(role="navigation")
+		.container
 			.navbar-header
 				button.navbar-toggle(type="button", data-toggle="collapse", data-target="#bs-example-navbar-collapse-1") Button
 					span.sr-only Toggle navigation
 					span.icon-bar
 					span.icon-bar
 					span.icon-bar
-				a.navbar-brand(href="#") Brand
+				a.navbar-brand(href="/") Requester
 			.collapse.navbar-collapse#bs-example-navbar-collapse-1
 				ul.nav.navbar-nav
-					li.active
-						a(href="#") Link
-					li
-						a(href="#") Link
+					li <a href="#">Link</a>
+					li <a href="#">Link</a>
 					li.dropdown
-						a.dropdown-toggle(href="#", data-toggle="dropdown") Dropdown 
-							b.caret
+						a.dropdown-toggle(href="#", data-toggle="dropdown") Dropdown <b class="caret"></b>
 					ul.dropdown-menu
-						li
-							a(href="#") Action
-							a(href="#") Another Action
-							a(href="#") And another Action
+						li <a href="#">Action</a>
+						li <a href="#">Action</a>
+						li <a href="#">Action</a>
 						li.divider
-						li
-							a(href="#") Separated link
+						li <a href="#">Separated link</a>
 						li.divider
-						li
-							a(href="#") Another Separated link
+						li <a href="#">Separated link</a>
 					form.navbar-form.navbar-left(role="search")
 						.form-group
 							input.form-control(type="text", placeholder="Search")
 						button.btn.btn-default(type="submit") Submit
-					ul.nav.navbar-nav.navbar-right
-						li
-							a(href="#") Link
+					ul.nav.navbar-nav.navbar-left
+						li <a href="#">Link</a>
 						li.dropdown
-							a.dropdown-toggle(href="#", data-toggle="dropdown") Dropdown
-							b.caret
+							a.dropdown-toggle(href="#", data-toggle="dropdown") Dropdown <b class="caret"></b>
 							ul.dropdown-menu
-								li
-									a(href="#") Action
-									a(href="#") Another Action
-									a(href="#") And another Action
+								li <a href="#">Action</a>
+								li <a href="#">Action</a>
+								li <a href="#">Action</a>
 								li.divider
-								li
-									a(href="#") Separated link
-	.container.jumbotron.col-md-6
-		h1 Request Help!
-		p.lead Do you need some help...
+								li <a href="#">Separated link</a>
+					ul.nav.navbar-nav.navbar-right
+						li.dropdown#user-dropdown <a href="#{user._id}" data-toggle="dropdown" class="navbar-link pull-right">#{user.displayName}<b class="caret"></b></a>
+							ul.dropdown-menu
+								li <a href="#">Action</a>
+								li <a href="#">Action</a>
+								li <a href="#">Action</a>
+								li.divider
+								li <a href="#">Separated link</a>
+	.jumbotron
+		.container
+			h1 Request Help!
+			p.lead Do you need some help...
 	.container
-		form.form-horizontal(role="form").col-md-6
+		form.form-horizontal#help-form(role="form").col-md-6
 			.form-group
 				label.control-label(for="issueText") Describe your issue
-				textarea.form-control(rows="3", placeholder="Issue?")
+				textarea.form-control#issue(rows="3", name="issue", placeholder="Issue?")
 			.form-group
-				button.btn.btn-lg.btn-primary Click Here!
+				button.btn.btn-lg.btn-primary#submit-btn Click Here!
+
+
+	script(src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js")
+	script(src="//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js")
+	script(src="/socket.io/socket.io.js")
+	script(src="/javascripts/lib/main.js")
