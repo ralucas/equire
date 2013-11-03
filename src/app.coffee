@@ -40,6 +40,10 @@ io = socketio.listen server
 
 #connect mongoose
 mongoose.connect 'mongodb://localhost'
+db = mongoose.connection
+
+db.once 'open', () ->
+	console.log 'alive'
 
 #instantiate the Issue database
 IssueSchema = new mongoose.Schema {
@@ -52,14 +56,17 @@ Issue = mongoose.model 'Issue', IssueSchema
 
 #instantiate the User database
 UserSchema = new mongoose.Schema {
-	openId: String,
+	_id:{type: String, required: true}
+	openId: String, #=_.id
 	displayName: String,
-	emails: [{value: String}],
+	emails: String
 }
 
 UserSchema.plugin(findOrCreate);
 
 User = mongoose.model 'User', UserSchema
+
+
 
 #passport Google setup
 passport.use new GoogleStrategy {
@@ -67,18 +74,43 @@ passport.use new GoogleStrategy {
 	realm: 'http://localhost:3000'
 	},
 	(identifier, profile, done) ->
-		User.findOrCreate {
-			openId: identifier,
-			displayName: profile.displayName,
-			emails: [{value: profile.emails[0]['value']}]
-		}, (err, user) ->
-			done err, user
+		console.log 'email', profile.emails[0]['value']
+		User.find( {_id: profile.emails[0]['value']}, (err, uniqueUser) ->
+			done err, uniqueUser
+			console.log 'uu', uniqueUser
+			if uniqueUser.length is 0
+				console.log 'uniqueUser', uniqueUser
+				User.create {
+					openId: identifier,
+					_id: profile.emails[0]['value'],
+					displayName: profile.displayName,
+					emails: profile.emails[0]['value']
+				}, (err, uniqueUser) ->
+					console.log 'hi'
+					done err, uniqueUser
+			)
+			#if user is not found create
+		# User.findOrCreate {
+		# 	openId: identifier,
+		# 	#_id: profile.emails[0]['value'],
+		# 	displayName: profile.displayName,
+		# 	emails: profile.emails[0]['value']
+		# }, 
+		# (err, user) ->
+		# 	done err, user
 
 passport.serializeUser (user, done) ->
 	done null, user
 
 passport.deserializeUser (obj, done) ->
 	done null, obj
+
+app.get '/auth/google', passport.authenticate 'google'
+
+app.get '/auth/google/return', passport.authenticate 'google', {
+	session: true,
+	successRedirect: '/student',
+	failureRedirect: '/'}
 
 #sockets on connection
 io.sockets.on 'connection', (socket) ->
@@ -108,13 +140,6 @@ app.get '/', (req, res) ->
 app.get '/student', (req, res) ->
 	current_user = req.user
 	res.render 'index', {user: req.user}
-
-app.get '/auth/google', passport.authenticate 'google'
-
-app.get '/auth/google/return', passport.authenticate 'google', {
-	session: true,
-	successRedirect: '/student',
-	failureRedirect: '/'}
 
 #teacher routing
 app.get '/teacher', (req, res) ->

@@ -5,14 +5,17 @@ $ () ->
 	socket.on 'connect', () ->
 		console.log 'hello sockets connected'
 
+	# $.get '/student', #{user}, (data) ->
+	# 	console.log 'hi'
+	# 	console.log data
+	# 	return
+
 	$('#help-form').on 'submit', (e) ->
 		e.preventDefault()
 		newIssue = $('#issue').val()
 		console.log newIssue
 		socket.emit 'newIssue', newIssue
 		$('#issue').val('')
-
-
 		return
 	
 	$('#teacherinput').on 'submit', $('#lesson-plan'), (e) ->
