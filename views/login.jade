@@ -1,5 +1,32 @@
 extends layout
 
 block content
-	.container
-		a.btn.btn-lg.btn-success(href="/auth/google") Sign In with Google
+	header.navbar.navbar-default.navbar-fixed-top(role="navigation")
+		.container
+			.navbar-header
+				button.navbar-toggle(type="button", data-toggle="collapse", data-target="#bs-example-navbar-collapse-1") Button
+					span.sr-only Toggle navigation
+					span.icon-bar
+					span.icon-bar
+					span.icon-bar
+				a.navbar-brand.pull-left(href="/") requester
+			.collapse.navbar-collapse#bs-example-navbar-collapse-1
+					ul.nav.navbar-nav.navbar-right
+						li
+							a.btn.btn-default(href="/auth/google") Sign In with Google		
+	section#first
+		section.jumbotron#hero
+			.container
+				h1.col-md-8#login-title Welcome to Requester
+				aside.signins.col-md-4
+					p.signin-btn#goog-btn <a class="btn btn-lg btn-success" href="/auth/google"> Sign In with Google</a>
+					p.signin-btn#face-btn <a class="btn btn-lg btn-primary" href="#"> Sign In with Facebook</a>
+					p.signin-btn#git-btn <a class="btn btn-lg btn-default" href="#"> Sign In with Github</a>
+	section#second
+		.container
+			.row.col-md-4
+				p Bacon ipsum dolor sit amet cow frankfurter turducken pork chop shoulder filet mignon sausage brisket shankle flank. Prosciutto jerky bacon kevin tail pig sirloin leberkas. Tri-tip chuck pancetta, pork ribeye frankfurter kevin. Flank tri-tip ham hock, corned beef spare ribs shank jerky short ribs salami fatback bresaola pastrami tongue. Beef ribs pork strip steak chuck tri-tip rump. Swine tenderloin jowl pancetta beef kevin cow ham boudin corned beef jerky leberkas chicken spare ribs flank. Filet mignon tail drumstick, pork loin beef ribs shankle tenderloin ham short loin shank pig ball tip shoulder. Spare ribs meatloaf shoulder swine tongue jowl.
+			.row.col-md-4
+				p Bacon ipsum dolor sit amet cow frankfurter turducken pork chop shoulder filet mignon sausage brisket shankle flank. Prosciutto jerky bacon kevin tail pig sirloin leberkas. Tri-tip chuck pancetta, pork ribeye frankfurter kevin. Flank tri-tip ham hock, corned beef spare ribs shank jerky short ribs salami fatback bresaola pastrami tongue. Beef ribs pork strip steak chuck tri-tip rump. Swine tenderloin jowl pancetta beef kevin cow ham boudin corned beef jerky leberkas chicken spare ribs flank. Filet mignon tail drumstick, pork loin beef ribs shankle tenderloin ham short loin shank pig ball tip shoulder. Spare ribs meatloaf shoulder swine tongue jowl.
+			.row.col-md-4
+				p Bacon ipsum dolor sit amet cow frankfurter turducken pork chop shoulder filet mignon sausage brisket shankle flank. Prosciutto jerky bacon kevin tail pig sirloin leberkas. Tri-tip chuck pancetta, pork ribeye frankfurter kevin. Flank tri-tip ham hock, corned beef spare ribs shank jerky short ribs salami fatback bresaola pastrami tongue. Beef ribs pork strip steak chuck tri-tip rump. Swine tenderloin jowl pancetta beef kevin cow ham boudin corned beef jerky leberkas chicken spare ribs flank. Filet mignon tail drumstick, pork loin beef ribs shankle tenderloin ham short loin shank pig ball tip shoulder. Spare ribs meatloaf shoulder swine tongue jowl.

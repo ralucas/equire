@@ -39,22 +39,23 @@ block content
 								li.divider
 								li <a href="#">Separated link</a>
 					ul.nav.navbar-nav.navbar-right
-						li.dropdown#user-dropdown <a href="#{user._id}" data-toggle="dropdown" class="navbar-link pull-right">#{user.displayName}<b class="caret"></b></a>
+						li.dropdownt#user-dropdown
+							a.dropdown-toggle(href="#{user._id}", data-toggle="dropdown") #{user.displayName}<b class="caret"></b></a>
 							ul.dropdown-menu
 								li <a href="#">Action</a>
 								li <a href="#">Action</a>
 								li <a href="#">Action</a>
 								li.divider
 								li <a href="#">Separated link</a>
-	.container#now-btn
-		h1 Greetings #{user.displayName}
-		button.btn.btn-lg.btn-success.animated.flash.tada Request help right now
+	.jumbotron
+		.container#now-btn
+			h1 Greetings #{user.displayName}
+			button.btn.btn-lg.btn-success.animated.flash.tada Request help right now
 	.container#issueinput
 		form.form-horizontal#help-form(role="form")
 			p.lead We'd love for you to tell us about your issue
 			.form-group
-				label.control-label(for="issueText") Describe your issue
-				textarea.form-control#issue(rows="3", name="issue", placeholder="Issue?")
+				textarea.form-control#issue(rows="5", name="issue", placeholder="Issue?")
 			.form-group
 				button.btn.btn-lg.btn-primary#submit-btn Click Here!
 
