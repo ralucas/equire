@@ -40,13 +40,13 @@ block content
 								li <a href="#">Separated link</a>
 					ul.nav.navbar-nav.navbar-right
 						li.dropdown#user-dropdown
-							a.dropdown-toggle(href="#", data-id="#{user._id}", data-toggle="dropdown") #{user.displayName}<b class="caret"></b></a>
+							a.dropdown-toggle(href="#", data-id="#{user._id}", data-toggle="dropdown", data-user="#{user.displayName}") #{user.displayName}<b class="caret"></b></a>
 							ul.dropdown-menu
-								li <a href="#">Action</a>
-								li <a href="#">Action</a>
-								li <a href="#">Action</a>
+								li <a href="#">Account Info</a>
+								li <a href="#">Current Requests</a>
+								li <a href="#">Past Requests</a>
 								li.divider
-								li <a href="#">Separated link</a>
+								li <a href="#">Sign Out</a>
 	.jumbotron
 		.container#now-btn
 			h1 Greetings #{user.displayName}
@@ -62,6 +62,7 @@ block content
 
 	script(src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js")
 	script(src="//cdnjs.cloudflare.com/ajax/libs/stellar.js/0.6.2/jquery.stellar.min.js")
+	script(src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.4.0/moment.min.js")
 	script(src="//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js")
 	script(src="/socket.io/socket.io.js")
 	script(src="/javascripts/lib/main.js")

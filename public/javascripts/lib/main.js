@@ -7,24 +7,28 @@
       return console.log('hello sockets connected');
     });
     $('#now-btn').on('click', 'button', function() {
-      var name, username;
+      var asapObj, displayName, username;
+      console.log('click');
       username = $(this).closest('body').find('#user-dropdown a').attr('data-id');
-      name = $(this).closest('body').find('#user-dropdown a').text();
-      console.log(name);
+      displayName = $(this).closest('body').find('#user-dropdown a').attr('data-user');
+      asapObj = {
+        username: username,
+        displayName: displayName
+      };
+      console.log(asapObj);
+      socket.emit('asapObj', asapObj);
     });
     $('#help-form').on('submit', function(e) {
-      var issueObj, name, newIssue, username;
+      var displayName, issueObj, newIssue, username;
       e.preventDefault();
       newIssue = $('#issue').val();
       username = $(this).closest('body').find('#user-dropdown a').attr('data-id');
-      name = $(this).closest('body').find('#user-dropdown a').text();
-      console.log(newIssue);
+      displayName = $(this).closest('body').find('#user-dropdown a').attr('data-user');
       issueObj = {
         newIssue: newIssue,
         username: username,
-        name: name
+        displayName: displayName
       };
-      console.log(issueObj);
       socket.emit('issueObj', issueObj);
       $('#issue').val('');
     });
@@ -39,9 +43,21 @@
       }
     });
     socket.on('issue', function(issue) {
-      console.log('hi');
-      console.log(issue);
-      $('#helprequests').append('<p class="lead">Issue: ' + issue.issue + ' Name: ' + issue.username + ' Time: ' + issue.time + '</p>');
+      $('#helptable tbody').append('<tr id="issueRow" class="animated flash"><td><input id="issueComplete" type="checkbox" data-id=' + issue._id + '></td>' + '<td>' + issue.displayName + '</td><td>' + issue.time + '</td><td>' + issue.issue + '</td></tr>');
+    });
+    socket.on('asapIssue', function(issue) {
+      $('#helptable tbody').append('<tr id="issueRow" class="animated flash"><td><input id="issueComplete" type="checkbox" data-id=' + issue._id + '></td>' + '<td>' + issue.displayName + '</td><td>' + issue.time + '</td><td>' + issue.issue + '</td></tr>');
+    });
+    $('#helptable').on('click', '#issueComplete', function() {
+      var completeObj, issueId;
+      console.log('checked');
+      issueId = $(this).attr('data-id');
+      completeObj = {
+        issueId: issueId,
+        isComplete: true
+      };
+      socket.emit('isComplete', completeObj);
+      $(this).closest('#issueRow').fadeOut('slow');
     });
   });
 

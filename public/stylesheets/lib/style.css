@@ -17,16 +17,21 @@ p {
 #tchr-sub-btn {
   text-align: center;
 }
+#helptitle {
+  text-align: center;
+}
 #issueinput {
   width: 50%;
 }
 #now-btn {
   margin: 2%;
   text-align: center;
+  font-size: 48px;
 }
 #now-btn button {
   width: 50%;
   height: 100px;
+  font-size: 48px;
 }
 #hero {
   background: url("/images/classroom.png") center top no-repeat;
@@ -52,8 +57,8 @@ p {
 }
 #second {
   border-color: #e8e8e8;
-  background: #f7f7f7 center top no-repeat;
-  color: #333;
+  background: #448cca center top no-repeat;
+  color: #fffffa;
 }
 #second h2 {
   text-align: center;

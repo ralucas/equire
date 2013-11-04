@@ -7,6 +7,7 @@ fs = require 'fs'
 util = require 'util'
 socketio = require 'socket.io'
 mongoose = require 'mongoose'
+moment = require 'moment'
 findOrCreate = require 'mongoose-findorcreate'
 passport = require 'passport'
 GoogleStrategy = require('passport-google').Strategy
@@ -45,11 +46,17 @@ db = mongoose.connection
 db.once 'open', () ->
 	console.log 'alive'
 
+#moment
+moment().format()
+
 #instantiate the Issue database
 IssueSchema = new mongoose.Schema {
 	issue: String,
 	username: String,
-	time: Object
+	displayName: String,
+	lesson: String,
+	time: Object,
+	isComplete: Boolean
 }
 
 Issue = mongoose.model 'Issue', IssueSchema
@@ -124,10 +131,14 @@ io.sockets.on 'connection', (socket) ->
 	###
 	socket.on 'issueObj', (issueObj) ->
 		console.log 'issueObj', issueObj
+		current_time = new Date()
+		console.log current_time
 		issue = new Issue({
 			issue: issueObj.newIssue,
 			username: issueObj.username,
-			time: new Date()
+			displayName: issueObj.displayName,
+			time: moment current_time, "HH:mm",
+			isComplete: false
 		})
 		issue.save()
 		console.log 'issueDb', issue
@@ -135,6 +146,33 @@ io.sockets.on 'connection', (socket) ->
 		console.log 'issue saved'
 		io.sockets.emit 'issue', issue
 		return
+
+	socket.on 'asapObj', (asapObj) ->
+		console.log 'asapObj', asapObj
+		current_time = new Date()
+		now = moment.format "MMM Do YY"
+		console.log 'now', now 
+		issue = new Issue({
+			issue : 'Needs Help',
+			username: asapObj.username,
+			displayName: asapObj.displayName,
+			time: moment.format "MMM Do YY",
+			isComplete: false
+			})
+		issue.save()
+		console.log 'issueDb', issue
+		console.log 'issue saved'
+		io.sockets.emit 'asapIssue', issue
+		return
+
+	socket.on 'isComplete', (completeObj) ->
+		console.log 'compObj', completeObj
+		Issue.findByIdAndUpdate(completeObj.issueId, {
+			isComplete : completeObj.isComplete
+			}, (err, id) ->
+				if err res.send 'ERROR!' else 
+					res.send {success : 'Completed!'}
+					)
 	return
 
 #student routing
