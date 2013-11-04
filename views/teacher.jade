@@ -50,19 +50,20 @@ block content
 		.row
 			h1 Welcome teacher
 			p.lead Please input today's lesson
-			form(role="form")#lesson-plan
-				.form-group
-					label(for="inputLesson") Lesson
-					input.form-control#lessonplan(type="text", placeholder="Enter lesson")
-				.form-group
-					label(for="inputFile") Upload Lesson plan
-					input#inputFile(type="file")
-					p.help-block JSON format preferred or .docx, .pdf, .odt, .xls
-				.checkbox
-					label Check box
-					input(type="checkbox")
-				button.btn.btn-primary.btn-lg#tchr-sub-btn(type="submit") Submit
-	.container#helprequests
+		form(role="form")#lesson-plan
+			.form-group
+				label(for="inputLesson") Lesson
+				input.form-control#lessonplan(type="text", placeholder="Enter lesson")
+			.form-group
+				label(for="inputFile") Upload Lesson plan
+				input#inputFile(type="file")
+				p.help-block JSON format preferred or .docx, .pdf, .odt, .xls
+			.checkbox
+				label Check box
+				input(type="checkbox")
+			button.btn.btn-primary.btn-lg#tchr-sub-btn(type="submit") Submit
+	section
+		.container#helprequests
 
 	script(src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js")
 	script(src="//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js")

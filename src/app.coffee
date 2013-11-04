@@ -48,8 +48,8 @@ db.once 'open', () ->
 #instantiate the Issue database
 IssueSchema = new mongoose.Schema {
 	issue: String,
-	time: Object,
-	displayName: {type: String, ref: 'User'}
+	username: String,
+	time: Object
 }
 
 Issue = mongoose.model 'Issue', IssueSchema
@@ -57,16 +57,14 @@ Issue = mongoose.model 'Issue', IssueSchema
 #instantiate the User database
 UserSchema = new mongoose.Schema {
 	_id:{type: String, required: true}
-	openId: String, #=_.id
+	openId: String,
 	displayName: String,
 	emails: String
 }
 
-UserSchema.plugin(findOrCreate);
+#UserSchema.plugin(findOrCreate);
 
 User = mongoose.model 'User', UserSchema
-
-
 
 #passport Google setup
 passport.use new GoogleStrategy {
@@ -75,20 +73,23 @@ passport.use new GoogleStrategy {
 	},
 	(identifier, profile, done) ->
 		console.log 'email', profile.emails[0]['value']
-		User.find( {_id: profile.emails[0]['value']}, (err, uniqueUser) ->
-			done err, uniqueUser
-			console.log 'uu', uniqueUser
-			if uniqueUser.length is 0
-				console.log 'uniqueUser', uniqueUser
+		User.find {_id: profile.emails[0]['value']}, (err, user) ->
+			done err, user[0]
+			console.log 'uu', user[0]
+			if user.length is 0
+				console.log 'uniqueUser', user[0]
 				User.create {
 					openId: identifier,
 					_id: profile.emails[0]['value'],
 					displayName: profile.displayName,
 					emails: profile.emails[0]['value']
-				}, (err, uniqueUser) ->
+				}, (err, user) ->
 					console.log 'hi'
-					done err, uniqueUser
-			)
+					done err, user[0]
+					return
+				return
+			return
+			
 			#if user is not found create
 		# User.findOrCreate {
 		# 	openId: identifier,
@@ -121,15 +122,18 @@ io.sockets.on 'connection', (socket) ->
 	that contains username, userID, issue, time, begin clock,
 	category, then send it over to the teachers side
 	###
-	socket.on 'newIssue', (newIssue) ->
-		console.log newIssue
-		console.log 'socket', current_user
+	socket.on 'issueObj', (issueObj) ->
+		console.log 'issueObj', issueObj
 		issue = new Issue({
-			issue: newIssue,
+			issue: issueObj.newIssue,
+			username: issueObj.username,
 			time: new Date()
 		})
 		issue.save()
+		console.log 'issueDb', issue
+		
 		console.log 'issue saved'
+		io.sockets.emit 'issue', issue
 		return
 	return
 
@@ -138,7 +142,6 @@ app.get '/', (req, res) ->
 	res.render 'login', {user: req.user}
 
 app.get '/student', (req, res) ->
-	current_user = req.user
 	res.render 'index', {user: req.user}
 
 #teacher routing

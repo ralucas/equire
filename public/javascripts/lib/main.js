@@ -6,12 +6,26 @@
     socket.on('connect', function() {
       return console.log('hello sockets connected');
     });
+    $('#now-btn').on('click', 'button', function() {
+      var name, username;
+      username = $(this).closest('body').find('#user-dropdown a').attr('data-id');
+      name = $(this).closest('body').find('#user-dropdown a').text();
+      console.log(name);
+    });
     $('#help-form').on('submit', function(e) {
-      var newIssue;
+      var issueObj, name, newIssue, username;
       e.preventDefault();
       newIssue = $('#issue').val();
+      username = $(this).closest('body').find('#user-dropdown a').attr('data-id');
+      name = $(this).closest('body').find('#user-dropdown a').text();
       console.log(newIssue);
-      socket.emit('newIssue', newIssue);
+      issueObj = {
+        newIssue: newIssue,
+        username: username,
+        name: name
+      };
+      console.log(issueObj);
+      socket.emit('issueObj', issueObj);
       $('#issue').val('');
     });
     $('#teacherinput').on('submit', $('#lesson-plan'), function(e) {
@@ -23,6 +37,11 @@
       } else {
         alert('Please enter a lesson plan');
       }
+    });
+    socket.on('issue', function(issue) {
+      console.log('hi');
+      console.log(issue);
+      $('#helprequests').append('<p class="lead">Issue: ' + issue.issue + ' Name: ' + issue.username + ' Time: ' + issue.time + '</p>');
     });
   });
 
