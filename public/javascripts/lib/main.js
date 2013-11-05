@@ -41,15 +41,17 @@
       socket.emit('issueObj', issueObj);
       $('#issue').val('');
     });
-    $('#teacherinput').on('submit', $('#lesson-plan'), function(e) {
-      var lessonplan;
+    $('#teacherInput').on('submit', $('#lessonForm'), function(e) {
+      var lessonInput;
       e.preventDefault();
-      lessonplan = $(this).find('#lessonplan').val();
-      if (lessonplan) {
-        $(this).closest('#teacherinput').slideUp();
+      console.log('lesson click');
+      lessonInput = $(this).find('#lessonInput').val();
+      if (lessonInput) {
+        $(this).closest('#teacherInput').slideUp();
       } else {
         alert('Please enter a lesson plan');
       }
+      socket.emit('lessonInput', lessonInput);
     });
     socket.on('issue', function(issue) {
       $('#helptable tbody').append('<tr class="issueRow animated flash"><td>' + '<input class="issueComplete" type="checkbox" data-id=' + issue._id + '></td>' + '<td>' + issue.displayName + '</td><td class="issueTime" data-time=' + issue.timeStamp + '>' + issue.time + '</td><td class="waitTime"></td><td>' + issue.issue + '</td></tr>');
@@ -70,15 +72,13 @@
       return waitTimer();
     }, 1000);
     waitTimer = function() {
-      $('.waitTime').each(function() {
-        var curr_time, issue_time, issue_time_int, iti;
+      $('.issueTime').each(function() {
+        var curr_time, issue_time, wait, waitConv;
         curr_time = moment().format('X');
-        issue_time = $(this).prev().attr('data-time');
-        issue_time_int = parseInt(issue_time);
-        iti = +moment(issue_time_int);
-        console.log(parseInt(issue_time));
-        console.log(moment(issue_time).fromNow());
-        $(this).text(moment(issue_time).fromNow());
+        issue_time = $(this).attr('data-time');
+        wait = curr_time - issue_time;
+        waitConv = moment(issue_time).fromNow();
+        $(this).next('.waitTime').text(wait);
       });
     };
     $('#helptable').on('click', '.issueComplete', function() {

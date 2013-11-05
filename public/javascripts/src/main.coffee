@@ -56,10 +56,19 @@ $ () ->
 		return
 	
 	#lesson plan submission event
-	$('#teacherinput').on 'submit', $('#lesson-plan'), (e) ->
+	# $('#lesson_plan').on 'submit', () ->
+		
+	# 	lessonInput = $('lessson_input').val()
+	# 	socket.emit 'lessonInput', lessonInput
+		
+	# 	return
+
+	$('#teacherInput').on 'submit', $('#lessonForm'), (e) ->
 		e.preventDefault()
-		lessonplan = $(@).find('#lessonplan').val()
-		if lessonplan then $(@).closest('#teacherinput').slideUp() else alert 'Please enter a lesson plan'
+		console.log 'lesson click'
+		lessonInput = $(@).find('#lessonInput').val()
+		if lessonInput then $(@).closest('#teacherInput').slideUp() else alert 'Please enter a lesson plan'
+		socket.emit 'lessonInput', lessonInput
 		return
 
 	#socket event placing issues on teacher side
@@ -95,14 +104,13 @@ $ () ->
 	, 1000
 
 	waitTimer = () ->
-		$('.waitTime').each () ->
+		$('.issueTime').each () ->
 			curr_time = moment().format('X')
-			issue_time = $(@).prev().attr('data-time')
-			issue_time_int = parseInt(issue_time)
-			iti = +moment(issue_time_int)
-			console.log parseInt(issue_time)
-			console.log moment(issue_time).fromNow()
-			$(@).text(moment(issue_time).fromNow())
+			issue_time = $(@).attr('data-time')
+			wait = curr_time - issue_time
+			waitConv = moment(issue_time).fromNow()
+			#console.log 'wait', waitConv
+			$(@).next('.waitTime').text(wait)
 			return
 		return
 

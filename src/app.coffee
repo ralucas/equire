@@ -8,7 +8,6 @@ util = require 'util'
 socketio = require 'socket.io'
 mongoose = require 'mongoose'
 moment = require 'moment'
-findOrCreate = require 'mongoose-findorcreate'
 passport = require 'passport'
 GoogleStrategy = require('passport-google').Strategy
 
@@ -126,7 +125,6 @@ app.get '/auth/google/return', passport.authenticate 'google', {
 io.sockets.on 'connection', (socket) ->
 	console.log 'hello from your socket server'
 	
-	
 	###
 	on submission of issue, package into a new object
 	that contains username, userID, issue, time, begin clock,
@@ -173,6 +171,10 @@ io.sockets.on 'connection', (socket) ->
 				if err then console.log 'ERROR!' else 
 					console.log 'Completed and Updated!'
 					)
+		return
+
+	socket.on 'lessonInput', (lessonInput) ->
+		console.log 'li', lessonInput
 		return
 	return
 

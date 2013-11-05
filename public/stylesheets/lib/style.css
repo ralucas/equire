@@ -4,12 +4,12 @@ body {
 #user-dropdown {
   float: right;
 }
-#teacherinput h1,
+#teacherInput h1,
 h2,
 p {
   text-align: center;
 }
-#teacherinput {
+#teacherInput {
   width: 50%;
 }
 .help-block {
