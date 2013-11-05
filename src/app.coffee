@@ -55,7 +55,9 @@ IssueSchema = new mongoose.Schema {
 	username: String,
 	displayName: String,
 	lesson: String,
+	timeStamp: Object,
 	time: Object,
+	totalWait: Object,
 	isComplete: Boolean
 }
 
@@ -123,51 +125,52 @@ app.get '/auth/google/return', passport.authenticate 'google', {
 #sockets on connection
 io.sockets.on 'connection', (socket) ->
 	console.log 'hello from your socket server'
-
+	
+	
 	###
 	on submission of issue, package into a new object
 	that contains username, userID, issue, time, begin clock,
 	category, then send it over to the teachers side
 	###
 	socket.on 'issueObj', (issueObj) ->
-		console.log 'issueObj', issueObj
+		timeStamp = moment().format('X')
+		console.log 'ts', timeStamp
 		current_time = moment().format('lll')
 		issue = new Issue({
 			issue: issueObj.newIssue,
 			username: issueObj.username,
 			displayName: issueObj.displayName,
+			timeStamp: timeStamp,
 			time: current_time,
 			isComplete: false
 		})
 		issue.save()
-		console.log 'issueDb', issue
-		
-		console.log 'issue saved'
 		io.sockets.emit 'issue', issue
 		return
 
 	socket.on 'asapObj', (asapObj) ->
-		console.log 'asapObj', asapObj
+		timeStamp = moment().format('X')
+		console.log 'ts', timeStamp
 		current_time = moment().format('lll')
 		issue = new Issue({
 			issue : 'Needs Help',
 			username: asapObj.username,
 			displayName: asapObj.displayName,
+			timeStamp: timeStamp,
 			time: current_time,
 			isComplete: false
 			})
 		issue.save()
-		console.log 'issueDb', issue
-		console.log 'issue saved'
 		io.sockets.emit 'asapIssue', issue
 		return
 
-	socket.on 'isComplete', (completeObj) ->
+	socket.on 'completeObj', (completeObj) ->
 		console.log 'compObj', completeObj
 		Issue.findByIdAndUpdate(completeObj.issueId, {
+			totalWait : completeObj.totalWait,
 			isComplete : completeObj.isComplete
 			}, (err, id) ->
-				if err res.send 'ERROR!' else 
+				if err then console.log 'ERROR!' else 
 					console.log 'Completed and Updated!'
 					)
 		return
@@ -183,6 +186,12 @@ app.get '/student', (req, res) ->
 #teacher routing
 app.get '/teacher', (req, res) ->
 	res.render 'teacher'
+
+#look for incomplete issues and send them to the client
+app.get '/found', (req, res) ->
+	Issue.find {isComplete: false}, (err, issue) ->
+		if err then console.log 'ERROR' else
+			res.send issue
 
 app.post '/help-request', (req, res) ->
 
