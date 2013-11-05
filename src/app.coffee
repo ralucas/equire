@@ -131,13 +131,12 @@ io.sockets.on 'connection', (socket) ->
 	###
 	socket.on 'issueObj', (issueObj) ->
 		console.log 'issueObj', issueObj
-		current_time = new Date()
-		console.log current_time
+		current_time = moment().format('lll')
 		issue = new Issue({
 			issue: issueObj.newIssue,
 			username: issueObj.username,
 			displayName: issueObj.displayName,
-			time: moment current_time, "HH:mm",
+			time: current_time,
 			isComplete: false
 		})
 		issue.save()
@@ -149,14 +148,12 @@ io.sockets.on 'connection', (socket) ->
 
 	socket.on 'asapObj', (asapObj) ->
 		console.log 'asapObj', asapObj
-		current_time = new Date()
-		now = moment.format "MMM Do YY"
-		console.log 'now', now 
+		current_time = moment().format('lll')
 		issue = new Issue({
 			issue : 'Needs Help',
 			username: asapObj.username,
 			displayName: asapObj.displayName,
-			time: moment.format "MMM Do YY",
+			time: current_time,
 			isComplete: false
 			})
 		issue.save()
@@ -171,8 +168,9 @@ io.sockets.on 'connection', (socket) ->
 			isComplete : completeObj.isComplete
 			}, (err, id) ->
 				if err res.send 'ERROR!' else 
-					res.send {success : 'Completed!'}
+					console.log 'Completed and Updated!'
 					)
+		return
 	return
 
 #student routing

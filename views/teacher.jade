@@ -65,16 +65,19 @@ block content
 	section
 		.container#helprequests
 			h1#helptitle Help Requests
+			h2#teacherclock
 			table.table.table-striped#helptable
 				thead 
 					tr
 						th ✔
 						th Name
 						th Time
+						th Wait
 						th Issue
 				tbody
 
 	script(src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js")
+	script(src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.4.0/moment.min.js")
 	script(src="//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js")
 	script(src="/socket.io/socket.io.js")
 	script(src="/javascripts/lib/main.js")
