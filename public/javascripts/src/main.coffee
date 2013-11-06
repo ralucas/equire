@@ -35,8 +35,12 @@ $ () ->
 			username : username,
 			displayName : displayName
 		}
-		console.log asapObj
 		socket.emit 'asapObj', asapObj
+		$(@).prev('h1').addClass('animated slideOutLeft')
+		$(@).removeClass('tada').addClass('slideOutRight')
+		$(@).closest('#studentjumbo').slideUp()
+		$(@).closest('#studentjumbo').next('#issueinput')
+			.append('<button class=btn btn-lg btn-success>Did you figure it out</button>')
 		return
 
 	#issue form submission event
@@ -56,13 +60,6 @@ $ () ->
 		return
 	
 	#lesson plan submission event
-	# $('#lesson_plan').on 'submit', () ->
-		
-	# 	lessonInput = $('lessson_input').val()
-	# 	socket.emit 'lessonInput', lessonInput
-		
-	# 	return
-
 	$('#teacherInput').on 'submit', $('#lessonForm'), (e) ->
 		e.preventDefault()
 		console.log 'lesson click'

@@ -24,8 +24,11 @@
         username: username,
         displayName: displayName
       };
-      console.log(asapObj);
       socket.emit('asapObj', asapObj);
+      $(this).prev('h1').addClass('animated slideOutLeft');
+      $(this).removeClass('tada').addClass('slideOutRight');
+      $(this).closest('#studentjumbo').slideUp();
+      $(this).closest('#studentjumbo').next('#issueinput').append('<button class=btn btn-lg btn-success>Did you figure it out</button>');
     });
     $('#help-form').on('submit', function(e) {
       var displayName, issueObj, newIssue, username;
