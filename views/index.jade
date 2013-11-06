@@ -43,15 +43,16 @@ block content
 							a.dropdown-toggle(href="#", data-id="#{user._id}", data-toggle="dropdown", data-user="#{user.displayName}") #{user.displayName}<b class="caret"></b></a>
 							ul.dropdown-menu
 								li <a href="#">Account Info</a>
-								li <a href="#">Current Requests</a>
+								li <a href="/currentrequests">Current Requests</a>
 								li <a href="#">Past Requests</a>
 								li.divider
-								li <a href="#">Sign Out</a>
+								li <a href="/logout">Sign Out</a>
 					p.navbar-text.navbar-right.pull-right#studentclock
 	.jumbotron#studentjumbo
 		.container#now-btn
 			h1 Greetings #{user.displayName}
-			button.btn.btn-lg.btn-success.animated.tada Request help right now
+			button#requestbtn.btn.btn-lg.btn-success.show.animated.tada Request help right now
+			button#figurebtn.btn.btn-lg.btn-warning.hidden Did you figure it out
 	.container#issueinput
 		form.form-horizontal#help-form(role="form")
 			p.lead We'd love for you to tell us about your issue

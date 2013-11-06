@@ -57,7 +57,8 @@ IssueSchema = new mongoose.Schema {
 	timeStamp: Object,
 	time: Object,
 	totalWait: Object,
-	isComplete: Boolean
+	isComplete: Boolean,
+	comment: String
 }
 
 Issue = mongoose.model 'Issue', IssueSchema
@@ -85,14 +86,12 @@ passport.use new GoogleStrategy {
 			done err, user[0]
 			console.log 'uu', user[0]
 			if user.length is 0
-				console.log 'uniqueUser', user[0]
 				User.create {
 					openId: identifier,
 					_id: profile.emails[0]['value'],
 					displayName: profile.displayName,
 					emails: profile.emails[0]['value']
 				}, (err, user) ->
-					console.log 'hi'
 					done err, user[0]
 					return
 				return
@@ -132,7 +131,6 @@ io.sockets.on 'connection', (socket) ->
 	###
 	socket.on 'issueObj', (issueObj) ->
 		timeStamp = moment().format('X')
-		console.log 'ts', timeStamp
 		current_time = moment().format('lll')
 		issue = new Issue({
 			issue: issueObj.newIssue,
@@ -140,37 +138,23 @@ io.sockets.on 'connection', (socket) ->
 			displayName: issueObj.displayName,
 			timeStamp: timeStamp,
 			time: current_time,
-			isComplete: false
+			isComplete: false,
+			comment: 'None'
 		})
 		issue.save()
 		io.sockets.emit 'issue', issue
 		return
 
-	socket.on 'asapObj', (asapObj) ->
-		timeStamp = moment().format('X')
-		console.log 'ts', timeStamp
-		current_time = moment().format('lll')
-		issue = new Issue({
-			issue : 'Needs Help',
-			username: asapObj.username,
-			displayName: asapObj.displayName,
-			timeStamp: timeStamp,
-			time: current_time,
-			isComplete: false
-			})
-		issue.save()
-		io.sockets.emit 'asapIssue', issue
-		return
-
 	socket.on 'completeObj', (completeObj) ->
-		console.log 'compObj', completeObj
 		Issue.findByIdAndUpdate(completeObj.issueId, {
 			totalWait : completeObj.totalWait,
 			isComplete : completeObj.isComplete
-			}, (err, id) ->
+			comment : completeObj.comment
+			}, (err, issue) ->
 				if err then console.log 'ERROR!' else 
 					console.log 'Completed and Updated!'
 					)
+		io.sockets.emit 'completeObj', completeObj
 		return
 
 	socket.on 'lessonInput', (lessonInput) ->
@@ -184,6 +168,13 @@ app.get '/', (req, res) ->
 
 app.get '/student', (req, res) ->
 	res.render 'index', {user: req.user}
+
+app.get '/logout', (req, res) ->
+	req.logout()
+	res.redirect('/')
+
+app.get '/currentrequests', (req, res) ->
+	userId = req.user._id
 
 #teacher routing
 app.get '/teacher', (req, res) ->

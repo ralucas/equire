@@ -5,86 +5,11 @@ $ () ->
 	socket.on 'connect', () ->
 		console.log 'hello sockets connected'
 
-	#receive incomplete issues and load them into Help Requests
-	$.get '/found', (data) ->
-		console.log data
-		for eachIssue in data
-			console.log 'i', eachIssue['_id']
-			$('#helptable tbody').append('<tr class="issueRow animated flash"><td>'+
-				'<input class="issueComplete" type="checkbox" data-id='+eachIssue['_id']+'></td>'+
-				'<td>'+eachIssue['displayName']+'</td><td class="issueTime" data-time='+eachIssue['timeStamp']+
-				'>'+eachIssue['time']+'</td><td class="waitTime"></td><td>'+eachIssue['issue']+'</td></tr>')
-		return
+	#
+	#Functions
+	#
 
-	# socket.on 'found', (issue) ->
-	# 	console.log issue
-	# 	for i in issue
-	# 		console.log 'i', i['_id']
-	# 		$('#helptable tbody').append('<tr class="issueRow animated flash"><td>'+
-	# 			'<input class="issueComplete" type="checkbox" data-id='+[i]['_id']+'></td>'+
-	# 			'<td>'+[i]['displayName']+'</td><td class="issueTime" data-time='+[i]['timeStamp']+
-	# 			'>'+[i]['time']+'</td><td class="waitTime"></td><td>'+[i]['issue']+'</td></tr>')
-	# 	return
-
-	#now button click event
-	$('#now-btn').on 'click', 'button', () ->
-		console.log 'click'
-		username = $(@).closest('body').find('#user-dropdown a').attr('data-id')
-		displayName = $(@).closest('body').find('#user-dropdown a').attr('data-user')
-		asapObj = {
-			username : username,
-			displayName : displayName
-		}
-		socket.emit 'asapObj', asapObj
-		$(@).prev('h1').addClass('animated slideOutLeft')
-		$(@).removeClass('tada').addClass('slideOutRight')
-		$(@).closest('#studentjumbo').slideUp()
-		$(@).closest('#studentjumbo').next('#issueinput')
-			.append('<button class="btn btn-lg btn-success">Did you figure it out</button>')
-		return
-
-	#issue form submission event
-	$('#help-form').on 'submit', (e) ->
-		e.preventDefault()
-		newIssue = $('#issue').val()
-		username = $(@).closest('body').find('#user-dropdown a').attr('data-id')
-		displayName = $(@).closest('body').find('#user-dropdown a').attr('data-user')
-		
-		issueObj = {
-			newIssue : newIssue,
-			username : username,
-			displayName : displayName
-		}
-		socket.emit 'issueObj', issueObj
-		$('#issue').val('')
-		return
-	
-	#lesson plan submission event
-	$('#teacherInput').on 'submit', $('#lessonForm'), (e) ->
-		e.preventDefault()
-		console.log 'lesson click'
-		lessonInput = $(@).find('#lessonInput').val()
-		if lessonInput then $(@).closest('#teacherInput').slideUp() else alert 'Please enter a lesson plan'
-		socket.emit 'lessonInput', lessonInput
-		return
-
-	#socket event placing issues on teacher side
-	socket.on 'issue', (issue) ->
-		$('#helptable tbody').append('<tr class="issueRow animated flash"><td>'+
-			'<input class="issueComplete" type="checkbox" data-id='+issue._id+'></td>'+
-			'<td>'+issue.displayName+'</td><td class="issueTime" data-time='+issue.timeStamp+
-			'>'+issue.time+'</td><td class="waitTime"></td><td>'+issue.issue+'</td></tr>')
-		return
-
-	#socket event placing now button click on teacher side
-	socket.on 'asapIssue', (issue) ->
-		$('#helptable tbody').append('<tr class="issueRow animated flash"><td>'+
-			'<input class="issueComplete" type="checkbox" data-id='+issue._id+'></td>'+
-			'<td>'+issue.displayName+'</td><td class="issueTime" data-time='+issue.timeStamp+
-			'>'+issue.time+'</td><td class="waitTime"></td><td>'+issue.issue+'</td></tr>')
-		return
-
-	#put a clock on the teacher site
+	#put a clock on the teacher and student site
 	clock = setInterval () ->
 		timer()
 	, 1000
@@ -111,23 +36,109 @@ $ () ->
 			return
 		return
 
-	#removes request on completion
-	$('#helptable').on 'click', '.issueComplete', () ->
-		console.log('checked')
-		curr_time = moment().format('X')
-		console.log 'ct', curr_time
-		issueId = $(@).attr('data-id')
-		issue_time = $(@).closest('.issueRow').find('.issueTime').attr('data-time')
-		console.log 'it', issue_time
-		totalWait = curr_time - issue_time
-		console.log 'tw', totalWait
+	#Create a new issue in database
+	issueCreation = (newIssue, username, displayName, isComplete) ->
+		issueObj = {
+			newIssue : newIssue
+			username : username,
+			displayName : displayName
+			isComplete : isComplete
+		}
+		socket.emit 'issueObj', issueObj
+		return
+
+	#issue complete function
+	issueCompletion = (issueId, issueTime, comment) ->
+		currTime = moment().format('X')
+		totalWait = currTime - issueTime
 		completeObj = {
 			issueId : issueId,
 			totalWait : totalWait,
-			isComplete : true
+			isComplete : true,
+			comment : comment
 		}
-		console.log 'co', completeObj
 		socket.emit 'completeObj', completeObj
-		$(@).closest('.issueRow').fadeOut('slow')
+		return
+
+	#
+	#Student side events	
+	#
+
+	#help now button click event
+	$('#now-btn').on 'click', '#requestbtn', () ->
+		console.log 'click'
+		username = $(@).closest('body').find('#user-dropdown a').attr('data-id')
+		displayName = $(@).closest('body').find('#user-dropdown a').attr('data-user')
+		issueCreation('Needs Help', username, displayName, false)
+		$(@).removeClass('tada').addClass('slideOutRight')
+		socket.on 'issue', (issue) ->
+			$('#requestbtn').addClass('hidden')
+			$('#figurebtn').removeClass('slideOutLeft hidden').addClass('show animated slideInLeft')
+			.attr('data-id',issue._id).attr('data-time',issue.timeStamp)
+			return
+		return
+
+	#figured it out button click event
+	$('#now-btn').on 'click', '#figurebtn', () ->
+		issueId = $(@).attr('data-id')
+		issueTime = $(@).attr('data-time')
+		console.log issueTime
+		issueCompletion(issueId, issueTime, 'Figured out on own')
+		$(@).removeClass('slideInLeft show').addClass('slideOutLeft hidden')
+		$('#requestbtn').removeClass('slideOutRight hidden').addClass('slideInRight show')
+		return
+
+	#issue form submission event
+	$('#help-form').on 'submit', (e) ->
+		e.preventDefault()
+		newIssue = $('#issue').val()
+		username = $(@).closest('body').find('#user-dropdown a').attr('data-id')
+		displayName = $(@).closest('body').find('#user-dropdown a').attr('data-user')
+		issueCreation(newIssue, username, displayName, false)
+		$('#issue').val('')
+		return
+	
+	#
+	#Teacher side events	
+	#
+
+	#lesson plan submission event
+	$('#teacherInput').on 'submit', $('#lessonForm'), (e) ->
+		e.preventDefault()
+		console.log 'lesson click'
+		lessonInput = $(@).find('#lessonInput').val()
+		if lessonInput then $(@).closest('#teacherInput').slideUp() else alert 'Please enter a lesson plan'
+		socket.emit 'lessonInput', lessonInput
+		return
+
+	#receive incomplete issues and load them into Help Requests
+	$.get '/found', (data) ->
+		console.log 'data', data
+		for eachIssue in data
+			$('#helptable tbody').append('<tr class="issueRow animated flash" data-id='+eachIssue['_id']+'><td>'+
+				'<input class="issueComplete" type="checkbox" data-id='+eachIssue['_id']+'></td>'+
+				'<td>'+eachIssue['displayName']+'</td><td class="issueTime" data-time='+eachIssue['timeStamp']+
+				'>'+eachIssue['time']+'</td><td class="waitTime"></td><td>'+eachIssue['issue']+'</td></tr>')
+		return
+
+	#socket event placing issues on teacher side
+	socket.on 'issue', (issue) ->
+		$('#helptable tbody').append('<tr class="issueRow animated flash" data-id='+issue._id+'><td>'+
+			'<input class="issueComplete" type="checkbox" data-id='+issue._id+'></td>'+
+			'<td>'+issue.displayName+'</td><td class="issueTime" data-time='+issue.timeStamp+
+			'>'+issue.time+'</td><td class="waitTime"></td><td>'+issue.issue+'</td></tr>')
+		return
+
+	#on check click event
+	$('#helptable').on 'click', '.issueComplete', () ->
+		console.log('checked')
+		issueId = $(@).attr('data-id')
+		issueTime = $(@).closest('.issueRow').find('.issueTime').attr('data-time')
+		issueCompletion(issueId, issueTime, 'completed')
+		return
+
+	#removes completed issue from help request list
+	socket.on 'completeObj', (completeObj) ->
+		$('#helptable').find('.issueRow[data-id='+completeObj.issueId+']').fadeOut('slow')
 		return
 	return
