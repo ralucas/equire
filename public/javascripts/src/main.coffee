@@ -40,7 +40,7 @@ $ () ->
 		$(@).removeClass('tada').addClass('slideOutRight')
 		$(@).closest('#studentjumbo').slideUp()
 		$(@).closest('#studentjumbo').next('#issueinput')
-			.append('<button class=btn btn-lg btn-success>Did you figure it out</button>')
+			.append('<button class="btn btn-lg btn-success">Did you figure it out</button>')
 		return
 
 	#issue form submission event
