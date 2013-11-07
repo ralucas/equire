@@ -1,0 +1,13 @@
+extends index
+
+block content
+	.container#pastReq
+		h1 Past Requests for #{user.displayName}
+		table.table.table-hover#pastReqTable
+			thead 
+				tr
+					th Time Placed
+					th Time Waited
+					th Issue
+					th Comment
+			tbody

@@ -36,6 +36,21 @@ p {
   margin-right: auto;
   margin-left: auto;
 }
+#currentReq h1 {
+  text-align: center;
+}
+#pastReq h1 {
+  text-align: center;
+}
+.edit {
+  color: #00f;
+}
+.edit:hover {
+  text-decoration: underline;
+  font-weight: bolder;
+  color: #008000;
+  cursor: pointer;
+}
 #hero {
   background: url("/images/classroom.png") center top no-repeat;
   background-size: cover;

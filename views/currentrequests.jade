@@ -1,0 +1,25 @@
+extends index
+
+block content
+	.container#currentReq
+		h1 Current Requests for #{user.displayName}
+		table.table.table-hover#currReqTable
+			thead 
+				tr
+					th Edit
+					th Time
+					th Wait
+					th Issue
+			tbody
+	.modal.fade#editRequestModal
+		.modal-dialog
+			.modal-content
+				.modal-header
+					button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
+					h4.modal-title Edit your Request
+				.modal-body
+					.form-group
+						textarea.form-control#modalIssue(rows="5", name="modalIssue")
+				.modal-footer
+					button.btn.btn-default(type="button", data-dismiss="modal") Close
+					button.btn.btn-primary#modalSave(type="button") Save changes

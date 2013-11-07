@@ -5,9 +5,9 @@ $ () ->
 	socket.on 'connect', () ->
 		console.log 'hello sockets connected'
 
-	#
-	#Functions
-	#
+	###
+	Functions
+	###
 
 	#put a clock on the teacher and student site
 	clock = setInterval () ->
@@ -27,15 +27,12 @@ $ () ->
 
 	waitTimer = () ->
 		$('.issueTime').each () ->
-			curr_time = moment().format('X')
-			issue_time = $(@).attr('data-time')
-			wait = curr_time - issue_time
-			waitConv = moment(issue_time).fromNow()
-			#console.log 'wait', waitConv
-			$(@).next('.waitTime').text(wait)
-			return
-		return
-
+			currTime = moment().format('X')
+			issueTime = $(@).attr('data-time')
+			wait = currTime - issueTime
+			waitConv = moment(issueTime*1000).fromNow()
+			$(@).next('.waitTime').text(waitConv)
+			
 	#Create a new issue in database
 	issueCreation = (newIssue, username, displayName, isComplete) ->
 		issueObj = {
@@ -46,6 +43,13 @@ $ () ->
 		}
 		socket.emit 'issueObj', issueObj
 		return
+
+	#issue edit
+	issueEdit = (text) ->
+		issueEditObj = {
+			issue : text
+		}
+		socket.emit 'issueEditObj', issueEditObj
 
 	#issue complete function
 	issueCompletion = (issueId, issueTime, comment) ->
@@ -60,9 +64,9 @@ $ () ->
 		socket.emit 'completeObj', completeObj
 		return
 
-	#
-	#Student side events	
-	#
+	###
+	Student side events	
+	###
 
 	#help now button click event
 	$('#now-btn').on 'click', '#requestbtn', () ->
@@ -98,9 +102,39 @@ $ () ->
 		$('#issue').val('')
 		return
 	
-	#
-	#Teacher side events	
-	#
+	#current request table
+	$.get '/currReq', (data) ->
+		for eachIssue in data
+			$('#currReqTable tbody').append('<tr class="issueRow" data-id='+eachIssue['_id']+'>'+
+				'<td class="edit" data-toggle="modal" data-target="#editRequestModal">Edit</td>'+
+				'<td class="issueTime" data-time='+eachIssue['timeStamp']+'>'+eachIssue['time']+'</td>'+
+				'<td class="waitTime"></td>'+
+				'<td class="issueDesc">'+eachIssue['issue']+'</td>'+
+				'</tr>')
+
+	$('#currReqTable').on 'click', '.edit', () ->
+		$('#modalIssue').empty()
+		issueDesc = $(@).next().next().next().text()
+		console.log issueDesc
+		$(@).closest('body').find('#modalIssue').text(issueDesc)
+
+	$('#modalSave').on 'click', () ->
+		editText = $(@).closest('.modal-content').find('#modalIssue').text()
+		issueEditText(editText)
+
+	#past request table
+	$.get '/pastReq', (data) ->
+		for eachIssue in data
+			$('#pastReqTable tbody').append('<tr class="issueRow" data-id='+eachIssue['_id']+'>'+
+				'<td class="issueTime" data-time='+eachIssue['timeStamp']+'>'+eachIssue['time']+'</td>'+
+				'</td><td class="waitTime">'+moment().minutes(eachIssue['totalWait'])+'</td>'+
+				'<td>'+eachIssue['issue']+'</td>'+
+				'<td>'+eachIssue['comment']+'</td>'+
+				'</tr>')
+
+	###
+	Teacher side events	
+	###
 
 	#lesson plan submission event
 	$('#teacherInput').on 'submit', $('#lessonForm'), (e) ->
@@ -113,20 +147,23 @@ $ () ->
 
 	#receive incomplete issues and load them into Help Requests
 	$.get '/found', (data) ->
-		console.log 'data', data
 		for eachIssue in data
-			$('#helptable tbody').append('<tr class="issueRow animated flash" data-id='+eachIssue['_id']+'><td>'+
-				'<input class="issueComplete" type="checkbox" data-id='+eachIssue['_id']+'></td>'+
-				'<td>'+eachIssue['displayName']+'</td><td class="issueTime" data-time='+eachIssue['timeStamp']+
-				'>'+eachIssue['time']+'</td><td class="waitTime"></td><td>'+eachIssue['issue']+'</td></tr>')
+			$('#helptable tbody').append('<tr class="issueRow animated flash" data-id='+eachIssue['_id']+'>'+
+				'<td><input class="issueComplete" type="checkbox" data-id='+eachIssue['_id']+'></td>'+
+				'<td>'+eachIssue['displayName']+'</td>'+
+				'<td class="issueTime" data-time='+eachIssue['timeStamp']+'>'+eachIssue['time']+'</td>'+
+				'<td class="waitTime"></td><td>'+eachIssue['issue']+'</td>'+
+				'</tr>')
 		return
 
 	#socket event placing issues on teacher side
 	socket.on 'issue', (issue) ->
-		$('#helptable tbody').append('<tr class="issueRow animated flash" data-id='+issue._id+'><td>'+
-			'<input class="issueComplete" type="checkbox" data-id='+issue._id+'></td>'+
-			'<td>'+issue.displayName+'</td><td class="issueTime" data-time='+issue.timeStamp+
-			'>'+issue.time+'</td><td class="waitTime"></td><td>'+issue.issue+'</td></tr>')
+		$('#helptable tbody').append('<tr class="issueRow animated flash" data-id='+issue._id+'>'+
+			'<td><input class="issueComplete" type="checkbox" data-id='+issue._id+'></td>'+
+			'<td>'+issue.displayName+'</td>'+
+			'<td class="issueTime" data-time='+issue.timeStamp+'>'+issue.time+'</td>'+
+			'<td class="waitTime"></td><td>'+issue.issue+'</td>'+
+			'</tr>')
 		return
 
 	#on check click event

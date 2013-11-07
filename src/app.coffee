@@ -129,6 +129,8 @@ io.sockets.on 'connection', (socket) ->
 	that contains username, userID, issue, time, begin clock,
 	category, then send it over to the teachers side
 	###
+
+	#socket event on issue instantiation
 	socket.on 'issueObj', (issueObj) ->
 		timeStamp = moment().format('X')
 		current_time = moment().format('lll')
@@ -145,6 +147,18 @@ io.sockets.on 'connection', (socket) ->
 		io.sockets.emit 'issue', issue
 		return
 
+	#socket event on edit
+	socket.on 'issueEditObj', (issueEditObj) ->
+		Issue.findByIdAndUpdate(issueEditObj.issueId, {
+			issue : issueEditObj.issue
+			}, (err, issue) ->
+				if err then console.log 'ERROR!' else 
+					console.log 'Edited and Updated!'
+					)
+		io.sockets.emit 'issueEditObj', issueEditObj
+
+
+	#socket event on completion of issue
 	socket.on 'completeObj', (completeObj) ->
 		Issue.findByIdAndUpdate(completeObj.issueId, {
 			totalWait : completeObj.totalWait,
@@ -157,26 +171,53 @@ io.sockets.on 'connection', (socket) ->
 		io.sockets.emit 'completeObj', completeObj
 		return
 
+	#socket event on lessonInput
 	socket.on 'lessonInput', (lessonInput) ->
 		console.log 'li', lessonInput
 		return
 	return
 
-#student routing
+#splash page
 app.get '/', (req, res) ->
 	res.render 'login', {user: req.user}
 
-app.get '/student', (req, res) ->
-	res.render 'index', {user: req.user}
+###
+Student Routing
+###
 
+#student page
+app.get '/student', (req, res) ->
+	res.render 'student', {user: req.user}
+
+#current request
+app.get '/currentrequests', (req, res) ->
+	res.render 'currentrequests', {user: req.user}
+
+app.get '/currReq', (req, res) ->
+	currUser = req.user._id
+	Issue.find {username: currUser, isComplete: false}, (err, issue) ->
+		if err then console.log 'ERROR' else
+			res.send issue
+
+#past requests
+app.get '/pastrequests', (req, res) ->
+	res.render 'pastrequests', {user: req.user}
+
+app.get '/pastReq', (req, res) ->
+	currUser = req.user._id
+	Issue.find {username: currUser, isComplete: true}, (err, issue) ->
+		if err then console.log 'ERROR' else
+			res.send issue	
+
+#logout
 app.get '/logout', (req, res) ->
 	req.logout()
 	res.redirect('/')
 
-app.get '/currentrequests', (req, res) ->
-	userId = req.user._id
+###
+Teacher Routing
+###
 
-#teacher routing
 app.get '/teacher', (req, res) ->
 	res.render 'teacher'
 
