@@ -11,6 +11,8 @@ moment = require 'moment'
 passport = require 'passport'
 GoogleStrategy = require('passport-google').Strategy
 client = require('twilio')('ACe1b7313b5b376f66c4db568dfa97e3e9', '1a3442ad88426e0561ed5d4fd4ae71e1')
+sys = require 'sys'
+childProcess = require 'child_process'
 
 app = express()
 
@@ -48,6 +50,9 @@ db.once 'open', () ->
 
 #moment
 moment().format()
+
+#execute command line
+
 
 #instantiate the Issue database
 IssueSchema = new mongoose.Schema {
@@ -132,7 +137,7 @@ io.sockets.on 'connection', (socket) ->
 			comment: 'None'
 		})
 		issue.save()
-		#Send an SMS text message
+		#Send an SMS text message via Twilio
 		client.sendMessage {
 			to:'+16145519436',
 			from: '+13036256825',
@@ -226,22 +231,6 @@ app.get '/found', (req, res) ->
 			res.send issue
 
 app.post '/help-request', (req, res) ->
-
-###
-Twilio implementation
-###
-
-###
-#Send an SMS text message
-client.sendMessage {
-	to:'+16145519436',
-	from: '+13036256825',
-	body: 'word to your mother.'
-}, (err, responseData) -> 
-	if !err
-		console.log(responseData.from);
-		console.log(responseData.body);
-###
 
 #get and listen to server
 server.listen(app.get('port'), () ->
