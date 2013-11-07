@@ -149,6 +149,7 @@ io.sockets.on 'connection', (socket) ->
 
 	#socket event on edit
 	socket.on 'issueEditObj', (issueEditObj) ->
+		console.log 'ieo', issueEditObj
 		Issue.findByIdAndUpdate(issueEditObj.issueId, {
 			issue : issueEditObj.issue
 			}, (err, issue) ->

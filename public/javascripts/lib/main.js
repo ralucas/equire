@@ -42,9 +42,10 @@
       };
       socket.emit('issueObj', issueObj);
     };
-    issueEdit = function(text) {
+    issueEdit = function(id, text) {
       var issueEditObj;
       issueEditObj = {
+        issueId: id,
         issue: text
       };
       return socket.emit('issueEditObj', issueEditObj);
@@ -105,16 +106,23 @@
       return _results;
     });
     $('#currReqTable').on('click', '.edit', function() {
-      var issueDesc;
+      var issueDesc, issueId;
       $('#modalIssue').empty();
       issueDesc = $(this).next().next().next().text();
-      console.log(issueDesc);
+      issueId = $(this).parent().attr('data-id');
+      $(this).closest('body').find('#modalSave').attr('data-id', issueId);
       return $(this).closest('body').find('#modalIssue').text(issueDesc);
     });
-    $('#modalSave').on('click', function() {
-      var editText;
-      editText = $(this).closest('.modal-content').find('#modalIssue').text();
-      return issueEditText(editText);
+    $('#editRequestModal').on('click', '#modalSave', function() {
+      var editText, issueId;
+      editText = $(this).closest('.modal-content').find('#modalIssue').val();
+      issueId = $(this).attr('data-id');
+      issueEdit(issueId, editText);
+      return $('#editRequestModal').modal('hide');
+    });
+    socket.on('issueEditObj', function(issueEditObj) {
+      $('#helptable').find('.issueRow[data-id=' + issueEditObj.issueId + ']').find('.issueDesc').text(issueEditObj.issue);
+      return $('#currReqTable').find('.issueRow[data-id=' + issueEditObj.issueId + ']').find('.issueDesc').text(issueEditObj.issue);
     });
     $.get('/pastReq', function(data) {
       var eachIssue, _i, _len, _results;
@@ -145,11 +153,11 @@
       var eachIssue, _i, _len;
       for (_i = 0, _len = data.length; _i < _len; _i++) {
         eachIssue = data[_i];
-        $('#helptable tbody').append('<tr class="issueRow animated flash" data-id=' + eachIssue['_id'] + '>' + '<td><input class="issueComplete" type="checkbox" data-id=' + eachIssue['_id'] + '></td>' + '<td>' + eachIssue['displayName'] + '</td>' + '<td class="issueTime" data-time=' + eachIssue['timeStamp'] + '>' + eachIssue['time'] + '</td>' + '<td class="waitTime"></td><td>' + eachIssue['issue'] + '</td>' + '</tr>');
+        $('#helptable tbody').append('<tr class="issueRow animated flash" data-id=' + eachIssue['_id'] + '>' + '<td><input class="issueComplete" type="checkbox" data-id=' + eachIssue['_id'] + '></td>' + '<td>' + eachIssue['displayName'] + '</td>' + '<td class="issueTime" data-time=' + eachIssue['timeStamp'] + '>' + eachIssue['time'] + '</td>' + '<td class="waitTime"></td>' + '<td class="issueDesc">' + eachIssue['issue'] + '</td>' + '</tr>');
       }
     });
     socket.on('issue', function(issue) {
-      $('#helptable tbody').append('<tr class="issueRow animated flash" data-id=' + issue._id + '>' + '<td><input class="issueComplete" type="checkbox" data-id=' + issue._id + '></td>' + '<td>' + issue.displayName + '</td>' + '<td class="issueTime" data-time=' + issue.timeStamp + '>' + issue.time + '</td>' + '<td class="waitTime"></td><td>' + issue.issue + '</td>' + '</tr>');
+      $('#helptable tbody').append('<tr class="issueRow animated flash" data-id=' + issue._id + '>' + '<td><input class="issueComplete" type="checkbox" data-id=' + issue._id + '></td>' + '<td>' + issue.displayName + '</td>' + '<td class="issueTime" data-time=' + issue.timeStamp + '>' + issue.time + '</td>' + '<td class="waitTime"></td>' + '<td class="issueDesc">' + issue.issue + '</td>' + '</tr>');
     });
     $('#helptable').on('click', '.issueComplete', function() {
       var issueId, issueTime;

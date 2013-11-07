@@ -45,8 +45,9 @@ $ () ->
 		return
 
 	#issue edit
-	issueEdit = (text) ->
+	issueEdit = (id, text) ->
 		issueEditObj = {
+			issueId : id,
 			issue : text
 		}
 		socket.emit 'issueEditObj', issueEditObj
@@ -102,7 +103,7 @@ $ () ->
 		$('#issue').val('')
 		return
 	
-	#current request table
+	#Current request table
 	$.get '/currReq', (data) ->
 		for eachIssue in data
 			$('#currReqTable tbody').append('<tr class="issueRow" data-id='+eachIssue['_id']+'>'+
@@ -112,15 +113,27 @@ $ () ->
 				'<td class="issueDesc">'+eachIssue['issue']+'</td>'+
 				'</tr>')
 
+	#edit click that pulls up modal
 	$('#currReqTable').on 'click', '.edit', () ->
 		$('#modalIssue').empty()
 		issueDesc = $(@).next().next().next().text()
-		console.log issueDesc
+		issueId = $(@).parent().attr('data-id')
+		$(@).closest('body').find('#modalSave').attr('data-id', issueId)
 		$(@).closest('body').find('#modalIssue').text(issueDesc)
 
-	$('#modalSave').on 'click', () ->
-		editText = $(@).closest('.modal-content').find('#modalIssue').text()
-		issueEditText(editText)
+	#on modal save updates db
+	$('#editRequestModal').on 'click', '#modalSave', () ->
+		editText = $(@).closest('.modal-content').find('#modalIssue').val()
+		issueId = $(@).attr('data-id')
+		issueEdit(issueId, editText)
+		$('#editRequestModal').modal('hide')
+
+	#socket event that updates pages
+	socket.on 'issueEditObj', (issueEditObj) ->
+		$('#helptable').find('.issueRow[data-id='+issueEditObj.issueId+']').find('.issueDesc')
+		.text(issueEditObj.issue)
+		$('#currReqTable').find('.issueRow[data-id='+issueEditObj.issueId+']').find('.issueDesc')
+		.text(issueEditObj.issue)
 
 	#past request table
 	$.get '/pastReq', (data) ->
@@ -152,7 +165,8 @@ $ () ->
 				'<td><input class="issueComplete" type="checkbox" data-id='+eachIssue['_id']+'></td>'+
 				'<td>'+eachIssue['displayName']+'</td>'+
 				'<td class="issueTime" data-time='+eachIssue['timeStamp']+'>'+eachIssue['time']+'</td>'+
-				'<td class="waitTime"></td><td>'+eachIssue['issue']+'</td>'+
+				'<td class="waitTime"></td>'+
+				'<td class="issueDesc">'+eachIssue['issue']+'</td>'+
 				'</tr>')
 		return
 
@@ -162,7 +176,8 @@ $ () ->
 			'<td><input class="issueComplete" type="checkbox" data-id='+issue._id+'></td>'+
 			'<td>'+issue.displayName+'</td>'+
 			'<td class="issueTime" data-time='+issue.timeStamp+'>'+issue.time+'</td>'+
-			'<td class="waitTime"></td><td>'+issue.issue+'</td>'+
+			'<td class="waitTime"></td>'+
+			'<td class="issueDesc">'+issue.issue+'</td>'+
 			'</tr>')
 		return
 
