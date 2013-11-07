@@ -42,11 +42,8 @@ server = http.createServer(app)
 io = socketio.listen server
 
 #connect mongoose
-mongoose.connect 'mongodb://localhost'
-db = mongoose.connection
-
-db.once 'open', () ->
-	console.log 'alive'
+MongoURL = process.env.MONGOHQ_URL ? 'mongodb://localhost'
+mongoose.connect MongoURL
 
 #moment
 moment().format()
