@@ -54,6 +54,7 @@ IssueSchema = new mongoose.Schema {
 	username: String,
 	displayName: String,
 	lesson: String,
+	date: Object,
 	timeStamp: Object,
 	time: Object,
 	totalWait: Object,
@@ -96,16 +97,6 @@ passport.use new GoogleStrategy {
 					return
 				return
 			return
-			
-			#if user is not found create
-		# User.findOrCreate {
-		# 	openId: identifier,
-		# 	#_id: profile.emails[0]['value'],
-		# 	displayName: profile.displayName,
-		# 	emails: profile.emails[0]['value']
-		# }, 
-		# (err, user) ->
-		# 	done err, user
 
 passport.serializeUser (user, done) ->
 	done null, user
@@ -123,21 +114,17 @@ app.get '/auth/google/return', passport.authenticate 'google', {
 #sockets on connection
 io.sockets.on 'connection', (socket) ->
 	console.log 'hello from your socket server'
-	
-	###
-	on submission of issue, package into a new object
-	that contains username, userID, issue, time, begin clock,
-	category, then send it over to the teachers side
-	###
 
 	#socket event on issue instantiation
 	socket.on 'issueObj', (issueObj) ->
+		date = moment().format('L')
 		timeStamp = moment().format('X')
 		current_time = moment().format('lll')
 		issue = new Issue({
 			issue: issueObj.newIssue,
 			username: issueObj.username,
 			displayName: issueObj.displayName,
+			date: date,
 			timeStamp: timeStamp,
 			time: current_time,
 			isComplete: false,
@@ -145,11 +132,9 @@ io.sockets.on 'connection', (socket) ->
 		})
 		issue.save()
 		io.sockets.emit 'issue', issue
-		return
 
 	#socket event on edit
 	socket.on 'issueEditObj', (issueEditObj) ->
-		console.log 'ieo', issueEditObj
 		Issue.findByIdAndUpdate(issueEditObj.issueId, {
 			issue : issueEditObj.issue
 			}, (err, issue) ->
@@ -157,7 +142,6 @@ io.sockets.on 'connection', (socket) ->
 					console.log 'Edited and Updated!'
 					)
 		io.sockets.emit 'issueEditObj', issueEditObj
-
 
 	#socket event on completion of issue
 	socket.on 'completeObj', (completeObj) ->
@@ -170,13 +154,16 @@ io.sockets.on 'connection', (socket) ->
 					console.log 'Completed and Updated!'
 					)
 		io.sockets.emit 'completeObj', completeObj
-		return
 
-	#socket event on lessonInput
-	socket.on 'lessonInput', (lessonInput) ->
-		console.log 'li', lessonInput
-		return
-	return
+	#socket event on lesson input, updates all requests from that day
+	#need to get it to work for all going forward
+	socket.on 'lessonUpdate', (lessonUpdate) ->
+		Issue.update({ date: lessonUpdate.date }, {lesson : lessonUpdate.lesson}, 
+			(err, numberAffected, raw) ->
+				if err then console.log 'ERROR' else
+				console.log 'The number of updated docs was ', numberAffected
+				console.log 'The raw response from Mongo was ', raw
+			)
 
 #splash page
 app.get '/', (req, res) ->

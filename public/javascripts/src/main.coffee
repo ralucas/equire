@@ -9,6 +9,9 @@ $ () ->
 	Functions
 	###
 
+	#today's date
+	today = moment().format('L')
+
 	#put a clock on the teacher and student site
 	clock = setInterval () ->
 		timer()
@@ -77,7 +80,7 @@ $ () ->
 		issueCreation('Needs Help', username, displayName, false)
 		$(@).removeClass('tada').addClass('slideOutRight')
 		socket.on 'issue', (issue) ->
-			$('#requestbtn').addClass('hidden')
+			$('#requestbtn').removeClass('show').addClass('hidden')
 			$('#figurebtn').removeClass('slideOutLeft hidden').addClass('show animated slideInLeft')
 			.attr('data-id',issue._id).attr('data-time',issue.timeStamp)
 			return
@@ -97,9 +100,11 @@ $ () ->
 	$('#help-form').on 'submit', (e) ->
 		e.preventDefault()
 		newIssue = $('#issue').val()
-		username = $(@).closest('body').find('#user-dropdown a').attr('data-id')
+		username = $(@).closest('body').find('#user-dropdown a').attr('data-id') 
 		displayName = $(@).closest('body').find('#user-dropdown a').attr('data-user')
-		issueCreation(newIssue, username, displayName, false)
+		issueId = $(@).closest('body').find('#figurebtn').attr('data-id')
+		if $(@).closest('body').find('#requestbtn').hasClass('show') then issueCreation(newIssue, username, displayName, false)
+		else issueEdit(issueId, newIssue)
 		$('#issue').val('')
 		return
 	
@@ -150,12 +155,18 @@ $ () ->
 	###
 
 	#lesson plan submission event
+	$('#date').text(today).attr('data-date', today)
+
 	$('#teacherInput').on 'submit', $('#lessonForm'), (e) ->
 		e.preventDefault()
-		console.log 'lesson click'
+		todaysDate = $(@).closest('#teacherInput').find('#date').attr('data-date')
 		lessonInput = $(@).find('#lessonInput').val()
 		if lessonInput then $(@).closest('#teacherInput').slideUp() else alert 'Please enter a lesson plan'
-		socket.emit 'lessonInput', lessonInput
+		lessonUpdate = {
+			date : todaysDate,
+			lesson : lessonInput
+		}
+		socket.emit 'lessonUpdate', lessonUpdate
 		return
 
 	#receive incomplete issues and load them into Help Requests
