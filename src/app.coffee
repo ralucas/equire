@@ -10,6 +10,7 @@ mongoose = require 'mongoose'
 moment = require 'moment'
 passport = require 'passport'
 GoogleStrategy = require('passport-google').Strategy
+client = require('twilio')('ACe1b7313b5b376f66c4db568dfa97e3e9', '1a3442ad88426e0561ed5d4fd4ae71e1')
 
 app = express()
 
@@ -131,6 +132,15 @@ io.sockets.on 'connection', (socket) ->
 			comment: 'None'
 		})
 		issue.save()
+		#Send an SMS text message
+		client.sendMessage {
+			to:'+16145519436',
+			from: '+13036256825',
+			body: issueObj.displayName+' '+issueObj.newIssue+'.'
+			}, (err, responseData) -> 
+			if !err
+				console.log responseData.from
+				console.log responseData.body
 		io.sockets.emit 'issue', issue
 
 	#socket event on edit
@@ -156,7 +166,7 @@ io.sockets.on 'connection', (socket) ->
 		io.sockets.emit 'completeObj', completeObj
 
 	#socket event on lesson input, updates all requests from that day
-	#need to get it to work for all going forward
+	#need to get it to work for all going forward, set a default for that day
 	socket.on 'lessonUpdate', (lessonUpdate) ->
 		Issue.update({ date: lessonUpdate.date }, {lesson : lessonUpdate.lesson}, 
 			(err, numberAffected, raw) ->
@@ -216,6 +226,22 @@ app.get '/found', (req, res) ->
 			res.send issue
 
 app.post '/help-request', (req, res) ->
+
+###
+Twilio implementation
+###
+
+###
+#Send an SMS text message
+client.sendMessage {
+	to:'+16145519436',
+	from: '+13036256825',
+	body: 'word to your mother.'
+}, (err, responseData) -> 
+	if !err
+		console.log(responseData.from);
+		console.log(responseData.body);
+###
 
 #get and listen to server
 server.listen(app.get('port'), () ->
