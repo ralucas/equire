@@ -83,8 +83,8 @@ User = mongoose.model 'User', UserSchema
 prodURL = 'http://intense-dawn-1429.herokuapp.com'
 localURL = 'http://localhost:3000'
 
-returnURLset = if process.env.PROD then prodURL else localURL
-realmset = if process.env.PROD then prodURL else localURL
+returnURLset = if 'production' then prodURL else localURL
+realmset = if 'production' then prodURL else localURL
 
 passport.use new GoogleStrategy {
 	returnURL: returnURLset+'/auth/google/return',
