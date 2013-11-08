@@ -80,9 +80,15 @@ UserSchema = new mongoose.Schema {
 User = mongoose.model 'User', UserSchema
 
 #passport Google setup
+prodURL = 'http://intense-dawn-1429.herokuapp.com'
+localURL = 'http://localhost:3000'
+
+returnURLset = if process.env.PROD then prodURL else localURL
+realmset = if process.env.PROD then prodURL else localURL
+
 passport.use new GoogleStrategy {
-	returnURL: 'http://localhost:3000/auth/google/return',
-	realm: 'http://localhost:3000'
+	returnURL: returnURLset+'/auth/google/return',
+	realm: realmset
 	},
 	(identifier, profile, done) ->
 		console.log 'email', profile.emails[0]['value']
