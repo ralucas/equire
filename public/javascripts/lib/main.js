@@ -69,7 +69,6 @@
 
     $('#now-btn').on('click', '#requestbtn', function() {
       var displayName, username;
-      console.log('click');
       username = $(this).closest('body').find('#user-dropdown a').attr('data-id');
       displayName = $(this).closest('body').find('#user-dropdown a').attr('data-user');
       issueCreation('Needs Help', username, displayName, false);
@@ -95,6 +94,9 @@
       displayName = $(this).closest('body').find('#user-dropdown a').attr('data-user');
       issueId = $(this).closest('body').find('#figurebtn').attr('data-id');
       if ($(this).closest('body').find('#requestbtn').hasClass('show')) {
+        $(this).closest('body').find('#requestbtn').removeClass('tada').addClass('slideOutRight');
+        $(this).closest('body').find('#requestbtn').removeClass('show').addClass('hidden');
+        $(this).closest('body').find('#figurebtn').removeClass('slideOutLeft hidden').addClass('show animated slideInLeft');
         issueCreation(newIssue, username, displayName, false);
       } else {
         issueEdit(issueId, newIssue);
@@ -164,19 +166,27 @@
       _results = [];
       for (_i = 0, _len = data.length; _i < _len; _i++) {
         eachIssue = data[_i];
-        _results.push($('#helptable tbody').append('<tr class="issueRow animated flash" data-id=' + eachIssue['_id'] + '>' + '<td><input class="issueComplete" type="checkbox" data-id=' + eachIssue['_id'] + '></td>' + '<td>' + eachIssue['displayName'] + '</td>' + '<td class="issueTime" data-time=' + eachIssue['timeStamp'] + '>' + eachIssue['time'] + '</td>' + '<td class="waitTime"></td>' + '<td class="issueDesc">' + eachIssue['issue'] + '</td>' + '<td class="comment">Add</td>' + '</tr>'));
+        _results.push($('#helptable tbody').append('<tr class="issueRow animated flash" data-id=' + eachIssue['_id'] + '>' + '<td><input class="issueComplete" type="checkbox" data-id=' + eachIssue['_id'] + '></td>' + '<td>' + eachIssue['displayName'] + '</td>' + '<td class="issueTime" data-time=' + eachIssue['timeStamp'] + '>' + eachIssue['time'] + '</td>' + '<td class="waitTime"></td>' + '<td class="issueDesc">' + eachIssue['issue'] + '</td>' + '<td class="comment show">Add</td>' + '<td class="hidden commentbox"><form class="form-inline" role="form"><div class="input-group input-group-sm">' + '<input class="form-control input-sm" type="text" placeholder="Add comment...">' + '<span class="input-group-btn">' + '<button class="btn btn-default btn-sm" type="button">Add!</button>' + '</span></div></form></td>' + '</tr>'));
       }
       return _results;
     });
     socket.on('issue', function(issue) {
-      return $('#helptable tbody').append('<tr class="issueRow animated flash" data-id=' + issue._id + '>' + '<td><input class="issueComplete" type="checkbox" data-id=' + issue._id + '></td>' + '<td>' + issue.displayName + '</td>' + '<td class="issueTime" data-time=' + issue.timeStamp + '>' + issue.time + '</td>' + '<td class="waitTime"></td>' + '<td class="issueDesc">' + issue.issue + '</td>' + '<td class="comment">Add</td>' + '</tr>');
+      return $('#helptable tbody').append('<tr class="issueRow animated flash" data-id=' + issue._id + '>' + '<td><input class="issueComplete" type="checkbox" data-id=' + issue._id + '></td>' + '<td>' + issue.displayName + '</td>' + '<td class="issueTime" data-time=' + issue.timeStamp + '>' + issue.time + '</td>' + '<td class="waitTime"></td>' + '<td class="issueDesc">' + issue.issue + '</td>' + '<td class="comment show">Add</td>' + '<td class="hidden commentbox"><form class="form-inline" role="form"><div class="input-group input-group-sm">' + '<input class="form-control input-sm" type="text" placeholder="Add comment...">' + '<span class="input-group-btn">' + '<button class="btn btn-default btn-sm" type="button">Add!</button>' + '</span></div></form></td>' + '</tr>');
     });
     /*
     	Idea: add sortability on current requests?
     */
 
     $('#helptable').on('click', '.comment', function() {
-      return console.log('comment clicked needs box added');
+      $(this).removeClass('show').addClass('hidden');
+      return $(this).next('.commentbox').removeClass('hidden').addClass('show');
+    });
+    $('#helptable').on('submit', '.commentbox', function(e) {
+      var commentText;
+      e.preventDefault();
+      commentText = $(this).find('input').val();
+      $(this).removeClass('show').addClass('hidden');
+      return $(this).prev('.comment').removeClass('hidden').text(commentText);
     });
     $('#helptable').on('click', '.issueComplete', function() {
       var comment, issueId, issueTime;
@@ -191,7 +201,9 @@
       return issueCompletion(issueId, issueTime, comment);
     });
     return socket.on('completeObj', function(completeObj) {
-      return $('#helptable').find('.issueRow[data-id=' + completeObj.issueId + ']').fadeOut('slow');
+      $('#helptable').find('.issueRow[data-id=' + completeObj.issueId + ']').fadeOut('slow');
+      $('#figurebtn').removeClass('slideInLeft show').addClass('slideOutLeft hidden');
+      return $('#requestbtn').removeClass('slideOutRight hidden').addClass('slideInRight show');
     });
   });
 

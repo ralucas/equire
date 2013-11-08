@@ -41,13 +41,50 @@ Functions
       });
     });
     /*
-    	Filter by name, date, time range, time waited, lesson, issue, comment
+    	Filter/Search by name, date, time range, time waited, lesson, issue, comment
     */
 
-    /*
-    	Search by name, data, time range, time waited, lesson, issue, comment
-    */
+    $('.search-menu').on('click', function() {
+      var $searchInput, index;
+      index = $(this).attr('data-type');
+      $searchInput = $(this).closest('#reports').find('.search-input');
+      $searchInput.find('.search-btn').text('Search by ' + index).attr('data-type', index);
+      return $searchInput.removeClass('hidden');
+    });
+    $('#reports').on('click', '.search-btn', function(e) {
+      var $searchval, index, searchResults, searchValue;
+      e.preventDefault();
+      $searchval = $(this).closest('.search-input').find('#search-value');
+      searchValue = $searchval.val();
+      index = $(this).attr('data-type');
+      searchResults = search(issueData, searchValue, index);
+      buildTable(searchResults);
+      return $searchval.val('');
+    });
+    $('#reports').on('click', '.reset-btn', function() {
+      if ($('.search-input').hasClass('hidden')) {
 
+      } else {
+        $('.search-input').addClass('hidden');
+      }
+      return buildTable(issueData);
+    });
+    $("#fromDate").datepicker({
+      defaultDate: 0,
+      changeMonth: true,
+      numberOfMonths: 1,
+      onClose: function(selectedDate) {
+        return $("#toDate").datepicker("option", "minDate", selectedDate);
+      }
+    });
+    $("#toDate").datepicker({
+      defaultDate: "+1w",
+      changeMonth: true,
+      numberOfMonths: 1,
+      onClose: function(selectedDate) {
+        return $("#fromDate").datepicker("option", "maxDate", selectedDate);
+      }
+    });
   });
 
 }).call(this);

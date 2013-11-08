@@ -29,6 +29,10 @@ body
 	color red
 	cursor pointer
 
+.commentbox
+	max-width 200px
+	font-size 10px
+
 //reports	
 
 #reports
@@ -38,13 +42,27 @@ body
 	text-align left
 
 #reportsHeaders th
-	color hsl(0, 0%, 65%)
+	color hsla(0, 0%, 0%, 0.6)
 
 #reportsHeaders th:hover
-	text-decoration underline
-	font-weight bolder
-	color red
+	color blue
 	cursor pointer
+
+#reports p
+	color hsla(0, 0%, 0%, 0.6)
+
+#reports .filter-click:hover
+	color blue
+	cursor pointer
+
+.search-menu:hover
+	background-color hsl(0, 0%, 97%)
+	cursor pointer
+
+.search-row
+	width 50%
+	margin-right auto
+	margin-left auto
 
 // student styling
 #studentjumbo

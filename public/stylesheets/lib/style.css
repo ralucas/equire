@@ -30,6 +30,10 @@ p {
   color: #f00;
   cursor: pointer;
 }
+.commentbox {
+  max-width: 200px;
+  font-size: 10px;
+}
 #reports {
   text-align: center;
 }
@@ -37,13 +41,27 @@ p {
   text-align: left;
 }
 #reportsHeaders th {
-  color: #a6a6a6;
+  color: rgba(0,0,0,0.6);
 }
 #reportsHeaders th:hover {
-  text-decoration: underline;
-  font-weight: bolder;
-  color: #f00;
+  color: #00f;
   cursor: pointer;
+}
+#reports p {
+  color: rgba(0,0,0,0.6);
+}
+#reports .filter-click:hover {
+  color: #00f;
+  cursor: pointer;
+}
+.search-menu:hover {
+  background-color: #f7f7f7;
+  cursor: pointer;
+}
+.search-row {
+  width: 50%;
+  margin-right: auto;
+  margin-left: auto;
 }
 #studentjumbo {
   background: rgba(0,0,0,0.8);

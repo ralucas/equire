@@ -71,7 +71,6 @@ $ () ->
 
 	#help now button click event
 	$('#now-btn').on 'click', '#requestbtn', () ->
-		console.log 'click'
 		username = $(@).closest('body').find('#user-dropdown a').attr('data-id')
 		displayName = $(@).closest('body').find('#user-dropdown a').attr('data-user')
 		issueCreation('Needs Help', username, displayName, false)
@@ -95,13 +94,16 @@ $ () ->
 		newIssue = $('#issue').val()
 		username = $(@).closest('body').find('#user-dropdown a').attr('data-id') 
 		displayName = $(@).closest('body').find('#user-dropdown a').attr('data-user')
-		issueId = $(@).closest('body').find('#figurebtn').attr('data-id')
+		issueId = $(@).closest('body').find('#figurebtn').attr('data-id')		
 		if $(@).closest('body').find('#requestbtn').hasClass('show')
+			$(@).closest('body').find('#requestbtn').removeClass('tada').addClass('slideOutRight')
+			$(@).closest('body').find('#requestbtn').removeClass('show').addClass('hidden')
+			$(@).closest('body').find('#figurebtn').removeClass('slideOutLeft hidden').addClass('show animated slideInLeft')
 			issueCreation(newIssue, username, displayName, false)
 		else issueEdit(issueId, newIssue)
 		$('#issue').val('')
 	
-#Current request table
+	#Current request table
 	$.get '/currReq', (data) ->
 		for eachIssue in data
 			$('#currReqTable tbody').append('<tr class="issueRow" data-id='+eachIssue['_id']+'>'+
@@ -133,7 +135,7 @@ $ () ->
 		$('#currReqTable').find('.issueRow[data-id='+issueEditObj.issueId+']').find('.issueDesc')
 		.text(issueEditObj.issue)
 
-#Past request table
+	#Past request table
 	$.get '/pastReq', (data) ->
 		for eachIssue in data
 			$('#pastReqTable tbody').append('<tr class="issueRow" data-id='+eachIssue['_id']+'>'+
@@ -170,7 +172,12 @@ $ () ->
 				'<td class="issueTime" data-time='+eachIssue['timeStamp']+'>'+eachIssue['time']+'</td>'+
 				'<td class="waitTime"></td>'+
 				'<td class="issueDesc">'+eachIssue['issue']+'</td>'+
-				'<td class="comment">Add</td>'+
+				'<td class="comment show">Add</td>'+
+				'<td class="hidden commentbox"><form class="form-inline" role="form"><div class="input-group input-group-sm">'+
+				'<input class="form-control input-sm" type="text" placeholder="Add comment...">'+
+				'<span class="input-group-btn">'+
+				'<button class="btn btn-default btn-sm" type="button">Add!</button>'+
+				'</span></div></form></td>'+
 				'</tr>')
 
 	#socket event placing issues on teacher side
@@ -181,16 +188,28 @@ $ () ->
 			'<td class="issueTime" data-time='+issue.timeStamp+'>'+issue.time+'</td>'+
 			'<td class="waitTime"></td>'+
 			'<td class="issueDesc">'+issue.issue+'</td>'+
-			'<td class="comment">Add</td>'+
+			'<td class="comment show">Add</td>'+
+			'<td class="hidden commentbox"><form class="form-inline" role="form"><div class="input-group input-group-sm">'+
+			'<input class="form-control input-sm" type="text" placeholder="Add comment...">'+
+			'<span class="input-group-btn">'+
+			'<button class="btn btn-default btn-sm" type="button">Add!</button>'+
+			'</span></div></form></td>'+
 			'</tr>')
 
 	###
 	Idea: add sortability on current requests?
 	###
 
-	#click event to add comment
+	#click events to add comment
 	$('#helptable').on 'click', '.comment', () ->
-		console.log 'comment clicked needs box added'
+		$(@).removeClass('show').addClass('hidden')
+		$(@).next('.commentbox').removeClass('hidden').addClass('show')
+
+	$('#helptable').on 'submit', '.commentbox', (e) ->
+		e.preventDefault()
+		commentText = $(@).find('input').val()
+		$(@).removeClass('show').addClass('hidden')
+		$(@).prev('.comment').removeClass('hidden').text(commentText)
 
 	#on check click event
 	$('#helptable').on 'click', '.issueComplete', () ->
@@ -205,3 +224,5 @@ $ () ->
 	#removes completed issue from help request list
 	socket.on 'completeObj', (completeObj) ->
 		$('#helptable').find('.issueRow[data-id='+completeObj.issueId+']').fadeOut('slow')
+		$('#figurebtn').removeClass('slideInLeft show').addClass('slideOutLeft hidden')
+		$('#requestbtn').removeClass('slideOutRight hidden').addClass('slideInRight show')

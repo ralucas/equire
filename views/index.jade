@@ -50,18 +50,20 @@ block header
 block content
 
 block footer
-	footer.navbar.navbar-default.navbar-fixed-bottom
+	footer.navbar.navbar-default.navbar-fixed-bottom.footer-bar
 		.container
-			a.navbar-brand.navbar-right.pull-right(href="/") Requester
+			p.navbar-text.navbar-right.pull-right Made in Colorado with ♡
 			p.navbar-text.navbar-left.pull-left Copyright ©2013
 
 block scripts
 	script(src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js")
+	script(src="//code.jquery.com/ui/1.10.3/jquery-ui.js")
 	script(src="//cdnjs.cloudflare.com/ajax/libs/stellar.js/0.6.2/jquery.stellar.min.js")
 	script(src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js")
 	script(src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.4.0/moment.min.js")
 	script(src="//d3js.org/d3.v3.min.js")
 	script(src="//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js")
 	script(src="/socket.io/socket.io.js")
+	script(src="/javascripts/lib/utility.js")
 	script(src="/javascripts/lib/reports.js")
 	script(src="/javascripts/lib/main.js")
