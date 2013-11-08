@@ -21,7 +21,6 @@ $ () ->
 		curr_time = moment().format('h:mm:ss a')
 		$('#teacherclock').text(curr_time)
 		$('#studentclock').text(curr_time)
-		return
 
 	#creates wait timer and checks it every 1 second
 	setInterval () ->
@@ -45,7 +44,6 @@ $ () ->
 			isComplete : isComplete
 		}
 		socket.emit 'issueObj', issueObj
-		return
 
 	#issue edit
 	issueEdit = (id, text) ->
@@ -66,7 +64,6 @@ $ () ->
 			comment : comment
 		}
 		socket.emit 'completeObj', completeObj
-		return
 
 	###
 	Student side events	
@@ -83,18 +80,14 @@ $ () ->
 			$('#requestbtn').removeClass('show').addClass('hidden')
 			$('#figurebtn').removeClass('slideOutLeft hidden').addClass('show animated slideInLeft')
 			.attr('data-id',issue._id).attr('data-time',issue.timeStamp)
-			return
-		return
 
 	#figured it out button click event
 	$('#now-btn').on 'click', '#figurebtn', () ->
 		issueId = $(@).attr('data-id')
 		issueTime = $(@).attr('data-time')
-		console.log issueTime
 		issueCompletion(issueId, issueTime, 'Figured out on own')
 		$(@).removeClass('slideInLeft show').addClass('slideOutLeft hidden')
 		$('#requestbtn').removeClass('slideOutRight hidden').addClass('slideInRight show')
-		return
 
 	#issue form submission event
 	$('#help-form').on 'submit', (e) ->
@@ -103,12 +96,12 @@ $ () ->
 		username = $(@).closest('body').find('#user-dropdown a').attr('data-id') 
 		displayName = $(@).closest('body').find('#user-dropdown a').attr('data-user')
 		issueId = $(@).closest('body').find('#figurebtn').attr('data-id')
-		if $(@).closest('body').find('#requestbtn').hasClass('show') then issueCreation(newIssue, username, displayName, false)
+		if $(@).closest('body').find('#requestbtn').hasClass('show')
+			issueCreation(newIssue, username, displayName, false)
 		else issueEdit(issueId, newIssue)
 		$('#issue').val('')
-		return
 	
-	#Current request table
+#Current request table
 	$.get '/currReq', (data) ->
 		for eachIssue in data
 			$('#currReqTable tbody').append('<tr class="issueRow" data-id='+eachIssue['_id']+'>'+
@@ -140,7 +133,7 @@ $ () ->
 		$('#currReqTable').find('.issueRow[data-id='+issueEditObj.issueId+']').find('.issueDesc')
 		.text(issueEditObj.issue)
 
-	#past request table
+#Past request table
 	$.get '/pastReq', (data) ->
 		for eachIssue in data
 			$('#pastReqTable tbody').append('<tr class="issueRow" data-id='+eachIssue['_id']+'>'+
@@ -167,7 +160,6 @@ $ () ->
 			lesson : lessonInput
 		}
 		socket.emit 'lessonUpdate', lessonUpdate
-		return
 
 	#receive incomplete issues and load them into Help Requests
 	$.get '/found', (data) ->
@@ -179,7 +171,6 @@ $ () ->
 				'<td class="waitTime"></td>'+
 				'<td class="issueDesc">'+eachIssue['issue']+'</td>'+
 				'</tr>')
-		return
 
 	#socket event placing issues on teacher side
 	socket.on 'issue', (issue) ->
@@ -190,7 +181,10 @@ $ () ->
 			'<td class="waitTime"></td>'+
 			'<td class="issueDesc">'+issue.issue+'</td>'+
 			'</tr>')
-		return
+
+	###
+	Idea: add sortability on current requests?
+	###
 
 	#on check click event
 	$('#helptable').on 'click', '.issueComplete', () ->
@@ -198,10 +192,7 @@ $ () ->
 		issueId = $(@).attr('data-id')
 		issueTime = $(@).closest('.issueRow').find('.issueTime').attr('data-time')
 		issueCompletion(issueId, issueTime, 'completed')
-		return
 
 	#removes completed issue from help request list
 	socket.on 'completeObj', (completeObj) ->
 		$('#helptable').find('.issueRow[data-id='+completeObj.issueId+']').fadeOut('slow')
-		return
-	return

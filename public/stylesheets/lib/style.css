@@ -21,6 +21,21 @@ p {
 #helptitle {
   text-align: center;
 }
+#reports {
+  text-align: center;
+}
+#reportsBody tr {
+  text-align: left;
+}
+#reportsHeaders th {
+  color: #00f;
+}
+#reportsHeaders th:hover {
+  text-decoration: underline;
+  font-weight: bolder;
+  color: #008000;
+  cursor: pointer;
+}
 #studentjumbo {
   background: rgba(0,0,0,0.8);
   background: url("/images/handsraised.png") center no-repeat;

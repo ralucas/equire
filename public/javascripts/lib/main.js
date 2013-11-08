@@ -18,7 +18,7 @@
       var curr_time;
       curr_time = moment().format('h:mm:ss a');
       $('#teacherclock').text(curr_time);
-      $('#studentclock').text(curr_time);
+      return $('#studentclock').text(curr_time);
     };
     setInterval(function() {
       return waitTimer();
@@ -41,7 +41,7 @@
         displayName: displayName,
         isComplete: isComplete
       };
-      socket.emit('issueObj', issueObj);
+      return socket.emit('issueObj', issueObj);
     };
     issueEdit = function(id, text) {
       var issueEditObj;
@@ -61,7 +61,7 @@
         isComplete: true,
         comment: comment
       };
-      socket.emit('completeObj', completeObj);
+      return socket.emit('completeObj', completeObj);
     };
     /*
     	Student side events
@@ -74,19 +74,18 @@
       displayName = $(this).closest('body').find('#user-dropdown a').attr('data-user');
       issueCreation('Needs Help', username, displayName, false);
       $(this).removeClass('tada').addClass('slideOutRight');
-      socket.on('issue', function(issue) {
+      return socket.on('issue', function(issue) {
         $('#requestbtn').removeClass('show').addClass('hidden');
-        $('#figurebtn').removeClass('slideOutLeft hidden').addClass('show animated slideInLeft').attr('data-id', issue._id).attr('data-time', issue.timeStamp);
+        return $('#figurebtn').removeClass('slideOutLeft hidden').addClass('show animated slideInLeft').attr('data-id', issue._id).attr('data-time', issue.timeStamp);
       });
     });
     $('#now-btn').on('click', '#figurebtn', function() {
       var issueId, issueTime;
       issueId = $(this).attr('data-id');
       issueTime = $(this).attr('data-time');
-      console.log(issueTime);
       issueCompletion(issueId, issueTime, 'Figured out on own');
       $(this).removeClass('slideInLeft show').addClass('slideOutLeft hidden');
-      $('#requestbtn').removeClass('slideOutRight hidden').addClass('slideInRight show');
+      return $('#requestbtn').removeClass('slideOutRight hidden').addClass('slideInRight show');
     });
     $('#help-form').on('submit', function(e) {
       var displayName, issueId, newIssue, username;
@@ -100,7 +99,7 @@
       } else {
         issueEdit(issueId, newIssue);
       }
-      $('#issue').val('');
+      return $('#issue').val('');
     });
     $.get('/currReq', function(data) {
       var eachIssue, _i, _len, _results;
@@ -158,27 +157,33 @@
         date: todaysDate,
         lesson: lessonInput
       };
-      socket.emit('lessonUpdate', lessonUpdate);
+      return socket.emit('lessonUpdate', lessonUpdate);
     });
     $.get('/found', function(data) {
-      var eachIssue, _i, _len;
+      var eachIssue, _i, _len, _results;
+      _results = [];
       for (_i = 0, _len = data.length; _i < _len; _i++) {
         eachIssue = data[_i];
-        $('#helptable tbody').append('<tr class="issueRow animated flash" data-id=' + eachIssue['_id'] + '>' + '<td><input class="issueComplete" type="checkbox" data-id=' + eachIssue['_id'] + '></td>' + '<td>' + eachIssue['displayName'] + '</td>' + '<td class="issueTime" data-time=' + eachIssue['timeStamp'] + '>' + eachIssue['time'] + '</td>' + '<td class="waitTime"></td>' + '<td class="issueDesc">' + eachIssue['issue'] + '</td>' + '</tr>');
+        _results.push($('#helptable tbody').append('<tr class="issueRow animated flash" data-id=' + eachIssue['_id'] + '>' + '<td><input class="issueComplete" type="checkbox" data-id=' + eachIssue['_id'] + '></td>' + '<td>' + eachIssue['displayName'] + '</td>' + '<td class="issueTime" data-time=' + eachIssue['timeStamp'] + '>' + eachIssue['time'] + '</td>' + '<td class="waitTime"></td>' + '<td class="issueDesc">' + eachIssue['issue'] + '</td>' + '</tr>'));
       }
+      return _results;
     });
     socket.on('issue', function(issue) {
-      $('#helptable tbody').append('<tr class="issueRow animated flash" data-id=' + issue._id + '>' + '<td><input class="issueComplete" type="checkbox" data-id=' + issue._id + '></td>' + '<td>' + issue.displayName + '</td>' + '<td class="issueTime" data-time=' + issue.timeStamp + '>' + issue.time + '</td>' + '<td class="waitTime"></td>' + '<td class="issueDesc">' + issue.issue + '</td>' + '</tr>');
+      return $('#helptable tbody').append('<tr class="issueRow animated flash" data-id=' + issue._id + '>' + '<td><input class="issueComplete" type="checkbox" data-id=' + issue._id + '></td>' + '<td>' + issue.displayName + '</td>' + '<td class="issueTime" data-time=' + issue.timeStamp + '>' + issue.time + '</td>' + '<td class="waitTime"></td>' + '<td class="issueDesc">' + issue.issue + '</td>' + '</tr>');
     });
+    /*
+    	Idea: add sortability on current requests?
+    */
+
     $('#helptable').on('click', '.issueComplete', function() {
       var issueId, issueTime;
       console.log('checked');
       issueId = $(this).attr('data-id');
       issueTime = $(this).closest('.issueRow').find('.issueTime').attr('data-time');
-      issueCompletion(issueId, issueTime, 'completed');
+      return issueCompletion(issueId, issueTime, 'completed');
     });
-    socket.on('completeObj', function(completeObj) {
-      $('#helptable').find('.issueRow[data-id=' + completeObj.issueId + ']').fadeOut('slow');
+    return socket.on('completeObj', function(completeObj) {
+      return $('#helptable').find('.issueRow[data-id=' + completeObj.issueId + ']').fadeOut('slow');
     });
   });
 

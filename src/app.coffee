@@ -134,6 +134,7 @@ io.sockets.on 'connection', (socket) ->
 			comment: 'None'
 		})
 		issue.save()
+		###
 		#Send an SMS text message via Twilio
 		client.sendMessage {
 			to:'+16145519436',
@@ -143,6 +144,7 @@ io.sockets.on 'connection', (socket) ->
 			if !err
 				console.log responseData.from
 				console.log responseData.body
+		###
 		io.sockets.emit 'issue', issue
 
 	#socket event on edit
@@ -162,7 +164,23 @@ io.sockets.on 'connection', (socket) ->
 			isComplete : completeObj.isComplete
 			comment : completeObj.comment
 			}, (err, issue) ->
-				if err then console.log 'ERROR!' else 
+				if err
+					console.log 'ERROR!' 
+				else if completeObj.comment is 'Figured out on own'
+					console.log 'figuredoutonown'
+					###
+					#If figured out on own
+					#Send an SMS text message via Twilio
+					client.sendMessage {
+						to:'+16145519436',
+						from: '+13036256825',
+						body: Issue.displayName+' '+completeObj.comment+'.'
+						}, (err, responseData) -> 
+						if !err
+							console.log responseData.from
+							console.log responseData.body
+					###
+				else
 					console.log 'Completed and Updated!'
 					)
 		io.sockets.emit 'completeObj', completeObj
@@ -222,12 +240,19 @@ app.get '/teacher', (req, res) ->
 	res.render 'teacher'
 
 #look for incomplete issues and send them to the client
+#Basically load unfinished requests
 app.get '/found', (req, res) ->
 	Issue.find {isComplete: false}, (err, issue) ->
 		if err then console.log 'ERROR' else
 			res.send issue
 
-app.post '/help-request', (req, res) ->
+app.get '/reports', (req, res) ->
+	res.render 'reports', {user: req.user}
+
+app.get '/reportsInfo', (req, res) ->
+	Issue.find {}, (err, issue) ->
+		if err then console.log 'ERROR' else
+			res.send issue
 
 #get and listen to server
 server.listen(app.get('port'), () ->
