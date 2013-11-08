@@ -164,23 +164,31 @@
       _results = [];
       for (_i = 0, _len = data.length; _i < _len; _i++) {
         eachIssue = data[_i];
-        _results.push($('#helptable tbody').append('<tr class="issueRow animated flash" data-id=' + eachIssue['_id'] + '>' + '<td><input class="issueComplete" type="checkbox" data-id=' + eachIssue['_id'] + '></td>' + '<td>' + eachIssue['displayName'] + '</td>' + '<td class="issueTime" data-time=' + eachIssue['timeStamp'] + '>' + eachIssue['time'] + '</td>' + '<td class="waitTime"></td>' + '<td class="issueDesc">' + eachIssue['issue'] + '</td>' + '</tr>'));
+        _results.push($('#helptable tbody').append('<tr class="issueRow animated flash" data-id=' + eachIssue['_id'] + '>' + '<td><input class="issueComplete" type="checkbox" data-id=' + eachIssue['_id'] + '></td>' + '<td>' + eachIssue['displayName'] + '</td>' + '<td class="issueTime" data-time=' + eachIssue['timeStamp'] + '>' + eachIssue['time'] + '</td>' + '<td class="waitTime"></td>' + '<td class="issueDesc">' + eachIssue['issue'] + '</td>' + '<td class="comment">Add</td>' + '</tr>'));
       }
       return _results;
     });
     socket.on('issue', function(issue) {
-      return $('#helptable tbody').append('<tr class="issueRow animated flash" data-id=' + issue._id + '>' + '<td><input class="issueComplete" type="checkbox" data-id=' + issue._id + '></td>' + '<td>' + issue.displayName + '</td>' + '<td class="issueTime" data-time=' + issue.timeStamp + '>' + issue.time + '</td>' + '<td class="waitTime"></td>' + '<td class="issueDesc">' + issue.issue + '</td>' + '</tr>');
+      return $('#helptable tbody').append('<tr class="issueRow animated flash" data-id=' + issue._id + '>' + '<td><input class="issueComplete" type="checkbox" data-id=' + issue._id + '></td>' + '<td>' + issue.displayName + '</td>' + '<td class="issueTime" data-time=' + issue.timeStamp + '>' + issue.time + '</td>' + '<td class="waitTime"></td>' + '<td class="issueDesc">' + issue.issue + '</td>' + '<td class="comment">Add</td>' + '</tr>');
     });
     /*
     	Idea: add sortability on current requests?
     */
 
+    $('#helptable').on('click', '.comment', function() {
+      return console.log('comment clicked needs box added');
+    });
     $('#helptable').on('click', '.issueComplete', function() {
-      var issueId, issueTime;
-      console.log('checked');
+      var comment, issueId, issueTime;
       issueId = $(this).attr('data-id');
       issueTime = $(this).closest('.issueRow').find('.issueTime').attr('data-time');
-      return issueCompletion(issueId, issueTime, 'completed');
+      comment = $(this).closest('.issueRow').find('.comment').text();
+      if (comment === 'Add') {
+        comment = 'Completed';
+      } else {
+        comment;
+      }
+      return issueCompletion(issueId, issueTime, comment);
     });
     return socket.on('completeObj', function(completeObj) {
       return $('#helptable').find('.issueRow[data-id=' + completeObj.issueId + ']').fadeOut('slow');

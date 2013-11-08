@@ -21,6 +21,15 @@ p {
 #helptitle {
   text-align: center;
 }
+.comment {
+  color: #a6a6a6;
+}
+.comment:hover {
+  text-decoration: underline;
+  font-weight: bolder;
+  color: #f00;
+  cursor: pointer;
+}
 #reports {
   text-align: center;
 }
@@ -28,12 +37,12 @@ p {
   text-align: left;
 }
 #reportsHeaders th {
-  color: #00f;
+  color: #a6a6a6;
 }
 #reportsHeaders th:hover {
   text-decoration: underline;
   font-weight: bolder;
-  color: #008000;
+  color: #f00;
   cursor: pointer;
 }
 #studentjumbo {

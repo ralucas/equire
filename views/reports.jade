@@ -6,10 +6,10 @@ block content
 		table.table.table-hover#reportsTable
 			thead 
 				tr#reportsHeaders
-					th#nameHead Name
-					th#timeentHead Time Entered
-					th#timewaitHead Time Waited
-					th#lessonHead Lesson
-					th#issueHead Issue
-					th#commentHead Comment
+					th(data-type="displayName") Name
+					th(data-type="time") Time Entered
+					th(data-type="totalWait") Time Waited
+					th(data-type="lesson") Lesson
+					th(data-type="issue") Issue
+					th(data-type="comment") Comment
 			tbody#reportsBody

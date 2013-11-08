@@ -10,16 +10,44 @@ Functions
 
 
 (function() {
+  var issueData;
+
+  issueData = [];
+
   $(function() {
-    $.get('/reportsInfo', function(data) {
-      var eachIssue, _i, _len, _results;
+    var buildTable;
+    buildTable = function(arr) {
+      var each, _i, _len, _results;
+      $('#reportsBody').empty();
       _results = [];
-      for (_i = 0, _len = data.length; _i < _len; _i++) {
-        eachIssue = data[_i];
-        _results.push($('#reportsBody').append('<tr class="issueRow" data-id=' + eachIssue['_id'] + '>' + '<td class="displayName">' + eachIssue['displayName'] + '</td>' + '<td class="issueTime" data-time=' + eachIssue['timeStamp'] + '>' + eachIssue['time'] + '</td>' + '</td><td class="waitTime">' + moment().minutes(eachIssue['totalWait']) + '</td>' + '<td>' + eachIssue['lesson'] + '</td>' + '<td>' + eachIssue['issue'] + '</td>' + '<td>' + eachIssue['comment'] + '</td>' + '</tr>'));
+      for (_i = 0, _len = arr.length; _i < _len; _i++) {
+        each = arr[_i];
+        _results.push($('#reportsBody').append('<tr class="issueRow" data-id=' + each['_id'] + '>' + '<td class="displayName">' + each['displayName'] + '</td>' + '<td class="issueTime" data-time=' + each['timeStamp'] + '>' + each['time'] + '</td>' + '</td><td class="waitTime">' + moment().minutes(each['totalWait']) + '</td>' + '<td>' + each['lesson'] + '</td>' + '<td>' + each['issue'] + '</td>' + '<td>' + each['comment'] + '</td>' + '</tr>'));
       }
       return _results;
+    };
+    $.get('/reportsInfo', function(data) {
+      issueData = data;
+      return buildTable(issueData);
     });
+    $('th').each(function() {
+      return $(this).on('click', function() {
+        var sortedData, value;
+        value = $(this).attr('data-type');
+        sortedData = _.sortBy(issueData, function(arr) {
+          return arr[value];
+        });
+        return buildTable(sortedData);
+      });
+    });
+    /*
+    	Filter by name, date, time range, time waited, lesson, issue, comment
+    */
+
+    /*
+    	Search by name, data, time range, time waited, lesson, issue, comment
+    */
+
   });
 
 }).call(this);

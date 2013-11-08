@@ -170,6 +170,7 @@ $ () ->
 				'<td class="issueTime" data-time='+eachIssue['timeStamp']+'>'+eachIssue['time']+'</td>'+
 				'<td class="waitTime"></td>'+
 				'<td class="issueDesc">'+eachIssue['issue']+'</td>'+
+				'<td class="comment">Add</td>'+
 				'</tr>')
 
 	#socket event placing issues on teacher side
@@ -180,18 +181,26 @@ $ () ->
 			'<td class="issueTime" data-time='+issue.timeStamp+'>'+issue.time+'</td>'+
 			'<td class="waitTime"></td>'+
 			'<td class="issueDesc">'+issue.issue+'</td>'+
+			'<td class="comment">Add</td>'+
 			'</tr>')
 
 	###
 	Idea: add sortability on current requests?
 	###
 
+	#click event to add comment
+	$('#helptable').on 'click', '.comment', () ->
+		console.log 'comment clicked needs box added'
+
 	#on check click event
 	$('#helptable').on 'click', '.issueComplete', () ->
-		console.log('checked')
 		issueId = $(@).attr('data-id')
 		issueTime = $(@).closest('.issueRow').find('.issueTime').attr('data-time')
-		issueCompletion(issueId, issueTime, 'completed')
+		comment = $(@).closest('.issueRow').find('.comment').text()
+		if comment is 'Add'
+			comment = 'Completed'
+		else comment
+		issueCompletion(issueId, issueTime, comment)
 
 	#removes completed issue from help request list
 	socket.on 'completeObj', (completeObj) ->
