@@ -81,6 +81,7 @@ User = mongoose.model 'User', UserSchema
 
 #passport Google setup
 ip = process.env.IP ? 'http://localhost:3000'
+#heroku config:add IP=http://intense-dawn-1429.herokuapp.com
 
 passport.use new GoogleStrategy {
 	returnURL: ip+'/auth/google/return',

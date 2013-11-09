@@ -1,6 +1,6 @@
 $ () ->
 	#instantiate sockets
-	socket = io.connect 'http://localhost'
+	socket = io.connect()
 
 	socket.on 'connect', () ->
 		console.log 'hello sockets connected'

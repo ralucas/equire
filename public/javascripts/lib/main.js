@@ -2,7 +2,7 @@
 (function() {
   $(function() {
     var clock, issueCompletion, issueCreation, issueEdit, socket, timer, today, waitTimer;
-    socket = io.connect('http://localhost');
+    socket = io.connect();
     socket.on('connect', function() {
       return console.log('hello sockets connected');
     });
