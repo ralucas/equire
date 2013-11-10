@@ -15,14 +15,20 @@ block content
 				li.divider
 				li#comment-search.search-menu(data-type="comment") Comment
 			.btn-group.date-filter
-				button.btn.btn-default.btn-xs.dropdown-toggle(type='button', data-toggle='dropdown') Date Filter <span class="caret"></span>
-				ul.dropdown-menu.date-menu(form='menu')
-					li Date from: <input type="text" id="fromDate" name="fromDate"/>
-					li Date to: <input type="text" id="toDate" name="toDate"/>
+				button.btn.btn-default.btn-xs#date-btn(type='button') Date Filter
+					.input-group.input-group-sm.date-row.filter-input.hidden
+						p Date from: <input type="text" id="fromDate" name="fromDate"/>
+						p Date to: <input type="text" id="toDate" name="toDate"/>
+							button.btn.btn-default.btn-xs#cancel-date(type='button') Cancel
+							button.btn.btn-primary.btn-xs#submit-date(type='button') Submit
 			.btn-group.timerange-filter
-				button.btn.btn-default.btn-xs.dropdown-toggle(type='button', data-toggle='dropdown') Time Range Filter <span class="caret"></span>
-				ul.dropdown-menu.race-dd
-		.row.search-input.hidden
+				button.btn.btn-default.btn-xs#time-btn(type='button') Time Range Filter
+					.input-group.input-group-sm.filter-input.time-row.hidden
+						p Time from: <input type="text" id="fromTime" name="fromTime"/>
+						p Time to: <input type="text" id="toTime" name="toTime"/>
+							button.btn.btn-default.btn-xs#cancel-time(type='button') Cancel
+							button.btn.btn-primary.btn-xs#submit-time(type='button') Submit
+		.row.search-input.filter-input.hidden
 			.input-group.input-group-sm.search-row
 				input#search-value.form-control(type='text', placeholder="Search")
 				span.input-group-btn

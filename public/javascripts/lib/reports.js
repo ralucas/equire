@@ -10,12 +10,16 @@ Functions
 
 
 (function() {
-  var issueData;
+  var filteredData, issueData, sortedData;
 
   issueData = [];
 
+  sortedData = [];
+
+  filteredData = [];
+
   $(function() {
-    var buildTable;
+    var buildTable, filter;
     buildTable = function(arr) {
       var each, _i, _len, _results;
       $('#reportsBody').empty();
@@ -32,7 +36,7 @@ Functions
     });
     $('th').each(function() {
       return $(this).on('click', function() {
-        var sortedData, value;
+        var value;
         value = $(this).attr('data-type');
         sortedData = _.sortBy(issueData, function(arr) {
           return arr[value];
@@ -40,6 +44,17 @@ Functions
         return buildTable(sortedData);
       });
     });
+    filter = function(arr, key, value1, value2) {
+      var each, output, _i, _len;
+      output = [];
+      for (_i = 0, _len = arr.length; _i < _len; _i++) {
+        each = arr[_i];
+        if (each[key] >= value1 && each[key] <= value2) {
+          output.push(each);
+        }
+      }
+      return output;
+    };
     /*
     	Filter/Search by name, date, time range, time waited, lesson, issue, comment
     */
@@ -62,12 +77,16 @@ Functions
       return $searchval.val('');
     });
     $('#reports').on('click', '.reset-btn', function() {
-      if ($('.search-input').hasClass('hidden')) {
+      if ($('.filter-input').hasClass('hidden')) {
 
       } else {
-        $('.search-input').addClass('hidden');
+        $('.filter-input').addClass('hidden');
       }
       return buildTable(issueData);
+    });
+    $('#reports').on('click', '#date-btn', function() {
+      console.log('button clicked');
+      return $('.date-row').removeClass('hidden');
     });
     $("#fromDate").datepicker({
       defaultDate: 0,
@@ -84,6 +103,37 @@ Functions
       onClose: function(selectedDate) {
         return $("#fromDate").datepicker("option", "maxDate", selectedDate);
       }
+    });
+    $('#reports').on('click', '#cancel-date', function() {
+      return $('.date-row').addClass('hidden');
+    });
+    $('#reports').on('click', '#submit-date', function() {
+      var fromDate, toDate;
+      fromDate = $("#fromDate").val();
+      toDate = $("#toDate").val();
+      filteredData = filter(issueData, "date", fromDate, toDate);
+      return buildTable(filteredData);
+    });
+    $('#fromTime').timepicker({
+      'timeFormat': 'h:i A'
+    });
+    $('#toTime').timepicker({
+      'timeFormat': 'h:i A'
+    });
+    $('#reports').on('click', '#time-btn', function() {
+      console.log('button clicked');
+      return $('.time-row').removeClass('hidden');
+    });
+    $('#reports').on('click', '#cancel-time', function() {
+      return $('.time-row').addClass('hidden');
+    });
+    $('#reports').on('click', '#submit-time', function() {
+      var fromTime, toTime;
+      fromTime = moment($("#fromTime").val()).format();
+      console.log(fromTime);
+      toTime = $("#toTime").val();
+      filteredData = filter(issueData, "date", fromTime, toTime);
+      return buildTable(filteredData);
     });
   });
 

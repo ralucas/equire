@@ -9,6 +9,8 @@ Functions
 ###
 
 issueData = []
+sortedData = []
+filteredData = []
 
 $ () ->
 
@@ -38,6 +40,13 @@ $ () ->
 				return arr[value])
 			buildTable(sortedData)
 
+	#filter data
+	filter = (arr, key, value1, value2) ->
+		output = []
+		for each in arr
+			if each[key] >= value1 and each[key] <= value2
+				output.push(each)
+		return output
 	#totals
 
 
@@ -63,11 +72,15 @@ $ () ->
 
 	#reset filter button
 	$('#reports').on 'click', '.reset-btn', () ->
-		if $('.search-input').hasClass('hidden')
-		else $('.search-input').addClass('hidden')
+		if $('.filter-input').hasClass('hidden')
+		else $('.filter-input').addClass('hidden')
 		buildTable(issueData)
 
 	#filter by date range
+	$('#reports').on 'click', '#date-btn', () ->
+		console.log 'button clicked'
+		$('.date-row').removeClass('hidden')
+
 	$("#fromDate").datepicker {
 		defaultDate: 0,
 		changeMonth: true,
@@ -84,8 +97,31 @@ $ () ->
 			$("#fromDate").datepicker "option", "maxDate", selectedDate
 		}
 
+	$('#reports').on 'click', '#cancel-date', () ->
+		$('.date-row').addClass('hidden')
+
+	$('#reports').on 'click', '#submit-date', () ->
+		fromDate = $("#fromDate").val()
+		toDate = $("#toDate").val()
+		filteredData = filter(issueData, "date", fromDate, toDate)
+		buildTable(filteredData)
 
 	#filter by time
+	$('#fromTime').timepicker({ 'timeFormat': 'h:i A' })
+	$('#toTime').timepicker({ 'timeFormat': 'h:i A' })
 
+	$('#reports').on 'click', '#time-btn', () ->
+		console.log 'button clicked'
+		$('.time-row').removeClass('hidden')
+
+	$('#reports').on 'click', '#cancel-time', () ->
+		$('.time-row').addClass('hidden')
+
+	$('#reports').on 'click', '#submit-time', () ->
+		fromTime = moment($("#fromTime").val()).format()
+		console.log fromTime
+		toTime = $("#toTime").val()
+		filteredData = filter(issueData, "date", fromTime, toTime)
+		buildTable(filteredData)
 
 	return
