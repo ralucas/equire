@@ -257,6 +257,9 @@ app.get '/reportsInfo', (req, res) ->
 		if err then console.log 'ERROR' else
 			res.send issue
 
+app.get '/charts', (req, res) ->
+	res.render 'charts', {user: req.user}
+
 #get and listen to server
 server.listen(app.get('port'), () ->
   console.log 'Express server listening on port ' + app.get('port'))
