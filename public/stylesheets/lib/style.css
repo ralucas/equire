@@ -1,6 +1,9 @@
 body {
   padding-top: 50px;
 }
+.footer-bar {
+  margin-bottom: 0px;
+}
 #user-dropdown {
   float: right;
 }
@@ -62,6 +65,9 @@ p {
   width: 50%;
   margin-right: auto;
   margin-left: auto;
+}
+.chart {
+  text-align: center;
 }
 #studentjumbo {
   background: rgba(0,0,0,0.8);

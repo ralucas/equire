@@ -47,8 +47,12 @@ $ () ->
 			if each[key] >= value1 and each[key] <= value2
 				output.push(each)
 		return output
+	
 	#totals
+	# $.get '/names', (data) ->
+	# 	console.log data
 
+	
 
 	###
 	Filter/Search by name, date, time range, time waited, lesson, issue, comment

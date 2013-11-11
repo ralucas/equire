@@ -13,6 +13,7 @@ GoogleStrategy = require('passport-google').Strategy
 client = require('twilio')('ACe1b7313b5b376f66c4db568dfa97e3e9', '1a3442ad88426e0561ed5d4fd4ae71e1')
 sys = require 'sys'
 childProcess = require 'child_process'
+_ = require 'underscore'
 
 app = express()
 
@@ -198,6 +199,20 @@ io.sockets.on 'connection', (socket) ->
 				console.log 'The raw response from Mongo was ', raw
 			)
 
+###
+Data Manipulation
+###
+# Issue.where({}).count( (err, count) ->
+# 	if err
+# 		console.log 'err'
+# 	else
+# 		issueCount = count
+# 		console.log 'is', issueCount
+# 	)
+
+
+
+
 #splash page
 app.get '/', (req, res) ->
 	res.render 'login', {user: req.user}
@@ -240,10 +255,9 @@ Teacher Routing
 ###
 
 app.get '/teacher', (req, res) ->
-	res.render 'teacher'
+	res.render 'teacher', {user: req.user}
 
 #look for incomplete issues and send them to the client
-#Basically load unfinished requests
 app.get '/found', (req, res) ->
 	Issue.find {isComplete: false}, (err, issue) ->
 		if err then console.log 'ERROR' else
@@ -257,8 +271,22 @@ app.get '/reportsInfo', (req, res) ->
 		if err then console.log 'ERROR' else
 			res.send issue
 
+app.get '/names', (req, res) ->
+	res.send nameCount
+
+app.get '/pieChart', (req, res) ->
+	key = 'isComplete'
+	Issue.find( (err, issues) ->
+		if err
+			console.log 'ERROR'
+		else
+			keyCount = _.countBy(issues, key)
+			res.send keyCount
+		)
+
 app.get '/charts', (req, res) ->
 	res.render 'charts', {user: req.user}
+
 
 #get and listen to server
 server.listen(app.get('port'), () ->

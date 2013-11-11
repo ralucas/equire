@@ -1,8 +1,12 @@
 $ () ->
 
 #Pie Chart for who is requesting most
+$.get '/pieChart', (data) ->
+	console.log data
 
-testdata = [
+
+
+PieData = [
 	{
 		value: 30,
 		color:"#F38630"
@@ -19,12 +23,12 @@ testdata = [
 
 ctx = $("#pieChart").get(0).getContext "2d"
 
-newPieChart = new Chart(ctx).Pie(testdata)
+newPieChart = new Chart(ctx).Pie(PieData)
 
 #Line Chart for Requests by days of the week
 
 linedata = {
-	labels : ["January","February","March","April","May","June","July"],
+	labels : ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
 	datasets : [
 		{
 			fillColor : "rgba(220,220,220,0.5)",

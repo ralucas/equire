@@ -4,48 +4,19 @@ block content
 	header.navbar.navbar-default.navbar-fixed-top(role="navigation")
 		.container
 			.navbar-header
-				button.navbar-toggle(type="button", data-toggle="collapse", data-target="#bs-example-navbar-collapse-1") Button
-					span.sr-only Toggle navigation
-					span.icon-bar
-					span.icon-bar
-					span.icon-bar
 				a.navbar-brand(href="/") Requester
-			.collapse.navbar-collapse#bs-example-navbar-collapse-1
-				ul.nav.navbar-nav
-					li <a href="#">Link</a>
-					li <a href="#">Link</a>
-					li.dropdown
-						a.dropdown-toggle(href="#", data-toggle="dropdown") Dropdown <b class="caret"></b>
+			ul.nav.navbar-nav.navbar-right
+				li <a href="/reports">Reports</a>
+				li <a href="/charts">Charts</a>
+			ul.nav.navbar-nav.navbar-right.pull-right
+				li.dropdown#user-dropdown
+					a.dropdown-toggle(href="/teacher", data-id="#{user._id}", data-toggle="dropdown", data-user="#{user.displayName}") #{user.displayName}<b class="caret"></b></a>
 					ul.dropdown-menu
-						li <a href="#">Action</a>
-						li <a href="#">Action</a>
-						li <a href="#">Action</a>
+						li <a href="/teacher">Teacher Home</a>
+						li <a href="/reports">Reports</a>
+						li <a href="/charts">Charts</a>
 						li.divider
-						li <a href="#">Separated link</a>
-						li.divider
-						li <a href="#">Separated link</a>
-					form.navbar-form.navbar-left(role="search")
-						.form-group
-							input.form-control(type="text", placeholder="Search")
-						button.btn.btn-default(type="submit") Submit
-					ul.nav.navbar-nav.navbar-left
-						li <a href="#">Link</a>
-						li.dropdown
-							a.dropdown-toggle(href="#", data-toggle="dropdown") Reports <b class="caret"></b>
-							ul.dropdown-menu
-								li <a href="#">Action</a>
-								li <a href="#">Action</a>
-								li <a href="#">Action</a>
-								li.divider
-								li <a href="#">Separated link</a>
-					ul.nav.navbar-nav.navbar-right
-						li.dropdown#user-dropdown <a href="#" data-toggle="dropdown" class="navbar-link pull-right"><b class="caret"></b></a>
-							ul.dropdown-menu
-								li <a href="#">Action</a>
-								li <a href="#">Action</a>
-								li <a href="#">Action</a>
-								li.divider
-								li <a href="#">Separated link</a>
+						li <a href="/logout">Sign Out</a>		
 	.container#teacherInput
 		.row
 			h1 Welcome teacher
@@ -59,9 +30,6 @@ block content
 				label(for="inputFile") Upload Lesson plan
 				input#inputFile(type="file")
 				p.help-block JSON format preferred or .docx, .pdf, .odt, .xls
-			.checkbox
-				label Check box
-				input(type="checkbox")
 			button.btn.btn-primary.btn-lg#tchr-sub-btn(type="submit") Submit
 	section
 		.container#helprequests
@@ -77,9 +45,4 @@ block content
 						th Issue
 						th Comment
 				tbody
-
-	script(src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js")
-	script(src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.4.0/moment.min.js")
-	script(src="//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js")
-	script(src="/socket.io/socket.io.js")
-	script(src="/javascripts/lib/main.js")
+	include footer

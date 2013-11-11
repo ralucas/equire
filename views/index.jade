@@ -4,68 +4,17 @@ block header
 	header.navbar.navbar-default.navbar-fixed-top(role="navigation")
 		.container
 			.navbar-header
-				button.navbar-toggle(type="button", data-toggle="collapse", data-target="#bs-example-navbar-collapse-1") Button
-					span.sr-only Toggle navigation
-					span.icon-bar
-					span.icon-bar
-					span.icon-bar
-				a.navbar-brand(href="/") Requester
-			.collapse.navbar-collapse#bs-example-navbar-collapse-1
-				ul.nav.navbar-nav
-					li <a href="#">Link</a>
-					li <a href="#">Link</a>
-					li.dropdown
-						a.dropdown-toggle(href="#", data-toggle="dropdown") Dropdown <b class="caret"></b>
+				a.navbar-brand.pull-left(href="/") Requester
+			p.navbar-text.pull-left#studentclock
+			ul.nav.navbar-nav
+				li <a href="/currentrequests">Edit Current Requests</a>
+			ul.nav.navbar-nav.navbar-right.pull-right
+				li.dropdown#user-dropdown
+					a.dropdown-toggle(href="/student", data-id="#{user._id}", data-toggle="dropdown", data-user="#{user.displayName}") #{user.displayName}<b class="caret"></b></a>
 					ul.dropdown-menu
-						li <a href="#">Action</a>
-						li <a href="#">Action</a>
-						li <a href="#">Action</a>
+						li <a href="/student">Student Home</a>
+						li <a href="/currentrequests">Current Requests</a>
+						li <a href="/pastrequests">Past Requests</a>
 						li.divider
-						li <a href="#">Separated link</a>
-						li.divider
-						li <a href="#">Separated link</a>
-					form.navbar-form.navbar-left(role="search")
-						.form-group
-							input.form-control(type="text", placeholder="Search")
-						button.btn.btn-default(type="submit") Submit
-					ul.nav.navbar-nav.navbar-left
-						li <a href="/currentrequests">Edit Current Requests</a>
-						li.dropdown
-							a.dropdown-toggle(href="#", data-toggle="dropdown") Dropdown <b class="caret"></b>
-							ul.dropdown-menu
-								li <a href="#">Action</a>
-								li <a href="#">Action</a>
-								li <a href="#">Action</a>
-								li.divider
-								li <a href="#">Separated link</a>
-					ul.nav.navbar-nav.navbar-right
-						li.dropdown#user-dropdown
-							a.dropdown-toggle(href="#", data-id="#{user._id}", data-toggle="dropdown", data-user="#{user.displayName}") #{user.displayName}<b class="caret"></b></a>
-							ul.dropdown-menu
-								li <a href="/currentrequests">Current Requests</a>
-								li <a href="/pastrequests">Past Requests</a>
-								li.divider
-								li <a href="/logout">Sign Out</a>
-					p.navbar-text.navbar-right.pull-right#studentclock
+						li <a href="/logout">Sign Out</a>			
 block content
-
-block footer
-	footer.navbar.navbar-default.navbar-fixed-bottom.footer-bar
-		.container
-			p.navbar-text.navbar-right.pull-right Made in Colorado with ♡
-			p.navbar-text.navbar-left.pull-left Copyright ©2013
-
-block scripts
-	script(src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js")
-	script(src="//code.jquery.com/ui/1.10.3/jquery-ui.js")
-	script(src="/javascripts/lib/jquery.timepicker.min.js")
-	script(src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/0.2.0/Chart.min.js")
-	script(src="//cdnjs.cloudflare.com/ajax/libs/stellar.js/0.6.2/jquery.stellar.min.js")
-	script(src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js")
-	script(src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.4.0/moment.min.js")
-	script(src="//netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js")
-	script(src="/socket.io/socket.io.js")
-	script(src="/javascripts/lib/utility.js")
-	script(src="/javascripts/lib/charts.js")
-	script(src="/javascripts/lib/reports.js")
-	script(src="/javascripts/lib/main.js")
