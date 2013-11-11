@@ -29,8 +29,8 @@ $ () ->
 
 	#builds totals table
 	# totalTable = (arr) ->
-	# 	$
-
+	# 	$('#summaryBody').empty()
+	# 	_.countBy(arr, )
 
 	#get all historical data
 	$.get '/reportsInfo', (data) ->
