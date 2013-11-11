@@ -27,6 +27,11 @@ $ () ->
 					'<td>'+each['comment']+'</td>'+
 					'</tr>')
 
+	#builds totals table
+	# totalTable = (arr) ->
+	# 	$
+
+
 	#get all historical data
 	$.get '/reportsInfo', (data) ->
 		issueData = data
@@ -35,10 +40,18 @@ $ () ->
 	#sorts on header click
 	$('th').each () ->
 		$(@).on 'click', () ->
-			value = $(@).attr('data-type')
-			sortedData = _.sortBy(issueData, (arr) ->
-				return arr[value])
-			buildTable(sortedData)
+			if $(@).hasClass('sorted')
+				$(@).addClass('reverse').removeClass('sorted')
+				rsd = sortedData.reverse()
+				console.log 'rsd', rsd
+				buildTable(rsd)
+			else
+				$(@).addClass('sorted').removeClass('reverse')
+				value = $(@).attr('data-type')
+				sortedData = _.sortBy(issueData, (arr) ->
+					return arr[value])
+				console.log 'sd', sortedData
+				buildTable(sortedData)
 
 	#filter data
 	filter = (arr, key, value1, value2) ->
@@ -49,8 +62,7 @@ $ () ->
 		return output
 	
 	#totals
-	# $.get '/names', (data) ->
-	# 	console.log data
+	
 
 	
 

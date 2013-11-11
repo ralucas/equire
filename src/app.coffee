@@ -231,9 +231,9 @@ app.get '/currentrequests', (req, res) ->
 
 app.get '/currReq', (req, res) ->
 	currUser = req.user._id
-	Issue.find {username: currUser, isComplete: false}, (err, issue) ->
+	Issue.find {username: currUser, isComplete: false}, (err, issues) ->
 		if err then console.log 'ERROR' else
-			res.send issue
+			res.send issues
 
 #past requests
 app.get '/pastrequests', (req, res) ->
@@ -241,9 +241,9 @@ app.get '/pastrequests', (req, res) ->
 
 app.get '/pastReq', (req, res) ->
 	currUser = req.user._id
-	Issue.find {username: currUser, isComplete: true}, (err, issue) ->
+	Issue.find {username: currUser, isComplete: true}, (err, issues) ->
 		if err then console.log 'ERROR' else
-			res.send issue	
+			res.send issues
 
 #logout
 app.get '/logout', (req, res) ->
@@ -259,21 +259,19 @@ app.get '/teacher', (req, res) ->
 
 #look for incomplete issues and send them to the client
 app.get '/found', (req, res) ->
-	Issue.find {isComplete: false}, (err, issue) ->
+	Issue.find {isComplete: false}, (err, issues) ->
 		if err then console.log 'ERROR' else
-			res.send issue
+			res.send issues
 
 app.get '/reports', (req, res) ->
 	res.render 'reports', {user: req.user}
 
 app.get '/reportsInfo', (req, res) ->
-	Issue.find {}, (err, issue) ->
+	Issue.find {}, (err, issues) ->
 		if err then console.log 'ERROR' else
-			res.send issue
+			res.send issues
 
-app.get '/names', (req, res) ->
-	res.send nameCount
-
+#chart routing
 app.get '/pieChart', (req, res) ->
 	key = 'displayName'
 	Issue.find( (err, issues) ->

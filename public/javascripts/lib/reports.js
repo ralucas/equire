@@ -36,12 +36,21 @@ Functions
     });
     $('th').each(function() {
       return $(this).on('click', function() {
-        var value;
-        value = $(this).attr('data-type');
-        sortedData = _.sortBy(issueData, function(arr) {
-          return arr[value];
-        });
-        return buildTable(sortedData);
+        var rsd, value;
+        if ($(this).hasClass('sorted')) {
+          $(this).addClass('reverse').removeClass('sorted');
+          rsd = sortedData.reverse();
+          console.log('rsd', rsd);
+          return buildTable(rsd);
+        } else {
+          $(this).addClass('sorted').removeClass('reverse');
+          value = $(this).attr('data-type');
+          sortedData = _.sortBy(issueData, function(arr) {
+            return arr[value];
+          });
+          console.log('sd', sortedData);
+          return buildTable(sortedData);
+        }
       });
     });
     filter = function(arr, key, value1, value2) {

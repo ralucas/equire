@@ -2,6 +2,18 @@ extends index
 
 block content
 	.container#reports
+		h1 Summary Info
+		table.table.table-bordered#summaryTable
+			thead 
+				tr#summaryHeaders
+					th(data-type="displayName") Total Requests to Date
+					th(data-type="timeStamp") Date with Most Requests and Total
+					th(data-type="totalWait") 
+					th(data-type="lesson") Lesson
+					th(data-type="issue") Issue
+					th(data-type="comment") Biggest Requester
+			tbody#summaryBody
+
 		h1 Teacher Reports
 		//- p.filter-click Click here to filter the data
 		.filter-buttons.btn-group
@@ -42,7 +54,7 @@ block content
 			thead 
 				tr#reportsHeaders
 					th(data-type="displayName") Name
-					th(data-type="time") Time Entered
+					th(data-type="timeStamp") Time Entered
 					th(data-type="totalWait") Time Waited
 					th(data-type="lesson") Lesson
 					th(data-type="issue") Issue
