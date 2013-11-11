@@ -1,52 +1,84 @@
 $ () ->
 
-#Pie Chart for who is requesting most
+#color randomizer function
+colorRandomizer = () ->
+	output = []
+	colors = ''
+	for i in 3
+		output.push(Math.floor(Math.random()*255))
+	colors = output.join(',')
+	return 'rgb('+colors+')'
+
+#Pie Chart for who is requesting most		
 $.get '/pieChart', (data) ->
-	console.log data
-
-
-
-PieData = [
-	{
-		value: 30,
-		color:"#F38630"
-	},
-	{
-		value : 50,
-		color : "#E0E4CC"
-	},
-	{
-		value : 100,
-		color : "#69D2E7"
-	}			
-]
-
-ctx = $("#pieChart").get(0).getContext "2d"
-
-newPieChart = new Chart(ctx).Pie(PieData)
+	pieData = []
+	values = []
+	for each, value of data
+		values.push(value)
+		obj = {
+			name : each
+			data : values
+		}
+		pieData.push(obj)
+	$('#pieChart').highcharts({
+		chart: {
+			type: 'pie'
+		},
+		title: {
+			text: 'Requests by User'
+			},
+		series: pieData
+		})
 
 #Line Chart for Requests by days of the week
-
-linedata = {
-	labels : ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
-	datasets : [
-		{
-			fillColor : "rgba(220,220,220,0.5)",
-			strokeColor : "rgba(220,220,220,1)",
-			pointColor : "rgba(220,220,220,1)",
-			pointStrokeColor : "#fff",
-			data : [65,59,90,81,56,55,40]
-		},
-		{
-			fillColor : "rgba(151,187,205,0.5)",
-			strokeColor : "rgba(151,187,205,1)",
-			pointColor : "rgba(151,187,205,1)",
-			pointStrokeColor : "#fff",
-			data : [28,48,40,19,96,27,100]
+$.get '/lineChart', (data) ->
+	console.log data
+	columnData = []
+	days = []
+	values = []
+	for each, value of data
+		values.push(value)
+		days.push(each)
+		obj = {
+			name : each
+			data : [value]
 		}
-	]
-}
-
-ctx = $("#lineChart").get(0).getContext "2d"
-
-newLineChart = new Chart(ctx).Line(linedata)
+		columnData.push(obj)
+	console.log columnData
+	$('#columnChart').highcharts({
+		chart: {
+			type: 'column'
+		},
+		title: {
+			text: 'Requests by Days of the Week'
+			},
+		xAxis: {
+			title: {
+				text: 'Days of the Week'
+			}
+		},
+		yAxis: {
+			title: {
+				text: 'Requests'
+			},
+			tickInterval: 1
+		},
+		series: columnData
+	})
+	lineData = {
+		labels : days,
+		datasets : [
+			{
+				fillColor : "rgba(151,187,205,0.5)",
+				strokeColor : "rgba(151,187,205,1)",
+				pointColor : "rgba(151,187,205,1)",
+				pointStrokeColor : "#fff",
+				data : values
+			}
+		]
+	}
+	line_options = {
+		scaleStartValue : 0
+	}
+	ctx = $("#lineChart").get(0).getContext "2d"
+	newLineChart = new Chart(ctx).Line(lineData, line_options)

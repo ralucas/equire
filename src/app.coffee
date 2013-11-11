@@ -138,8 +138,8 @@ io.sockets.on 'connection', (socket) ->
 			comment: 'None'
 		})
 		issue.save()
-		###
 		#Send an SMS text message via Twilio
+		###
 		client.sendMessage {
 			to:'+16145519436',
 			from: '+13036256825',
@@ -275,13 +275,26 @@ app.get '/names', (req, res) ->
 	res.send nameCount
 
 app.get '/pieChart', (req, res) ->
-	key = 'isComplete'
+	key = 'displayName'
 	Issue.find( (err, issues) ->
 		if err
 			console.log 'ERROR'
 		else
 			keyCount = _.countBy(issues, key)
 			res.send keyCount
+		)
+
+app.get '/lineChart', (req, res) ->
+	days = []
+	Issue.find( (err, issues) ->
+		if err
+			console.log 'ERROR'
+		else
+			dates = _.pluck(issues, 'date')
+			for each in dates
+				days.push(moment(each).format('dddd'))
+			daysCount = _.countBy(days)
+			res.send daysCount
 		)
 
 app.get '/charts', (req, res) ->

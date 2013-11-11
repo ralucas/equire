@@ -16,24 +16,27 @@ block content
 				li#comment-search.search-menu(data-type="comment") Comment
 			.btn-group.date-filter
 				button.btn.btn-default.btn-xs#date-btn(type='button') Date Filter
-					.input-group.input-group-sm.date-row.filter-input.hidden
-						p Date from: <input type="text" id="fromDate" name="fromDate"/>
-						p Date to: <input type="text" id="toDate" name="toDate"/>
-							button.btn.btn-default.btn-xs#cancel-date(type='button') Cancel
-							button.btn.btn-primary.btn-xs#submit-date(type='button') Submit
 			.btn-group.timerange-filter
 				button.btn.btn-default.btn-xs#time-btn(type='button') Time Range Filter
-					.input-group.input-group-sm.filter-input.time-row.hidden
-						p Time from: <input type="text" id="fromTime" name="fromTime"/>
-						p Time to: <input type="text" id="toTime" name="toTime"/>
-							button.btn.btn-default.btn-xs#cancel-time(type='button') Cancel
-							button.btn.btn-primary.btn-xs#submit-time(type='button') Submit
+		.row.input-group.input-group-sm.date-row.filter-input.hidden
+			p Date from: <input type="text" id="fromDate" name="fromDate"/>
+			p Date to: <input type="text" id="toDate" name="toDate"/>
+			button.btn.btn-default.btn-xs#cancel-date(type='button') Cancel
+			button.btn.btn-primary.btn-xs#submit-date(type='button') Submit
+		.row.input-group.input-group-sm.filter-input.time-row.hidden
+			p Time from: <input type="text" id="fromTime" name="fromTime"/>
+			p Time to: <input type="text" id="toTime" name="toTime"/>
+			button.btn.btn-default.btn-xs#cancel-time(type='button') Cancel
+			button.btn.btn-primary.btn-xs#submit-time(type='button') Submit
 		.row.search-input.filter-input.hidden
 			.input-group.input-group-sm.search-row
 				input#search-value.form-control(type='text', placeholder="Search")
 				span.input-group-btn
-					button.btn.btn-default.search-btn(type="button") Search
-		button.btn.btn-default.btn-xs.reset-btn(type='button') Reset Filters
+					button.btn.btn-primary.search-btn(type="button") Search
+				span.input-group-btn
+					button.btn.btn-default.cancel-search(type="button") Cancel
+		.row.reset-row
+			button.btn.btn-default.btn-sm.reset-btn(type='button') Reset Filters
 		p Click on headers to sort by that criteria
 		table.table.table-hover#reportsTable
 			thead 

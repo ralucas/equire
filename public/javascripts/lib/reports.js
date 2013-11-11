@@ -60,11 +60,12 @@ Functions
     */
 
     $('.search-menu').on('click', function() {
-      var $searchInput, index;
+      var $searchInput, index, srchText;
       index = $(this).attr('data-type');
+      srchText = $(this).text();
       $searchInput = $(this).closest('#reports').find('.search-input');
-      $searchInput.find('.search-btn').text('Search by ' + index).attr('data-type', index);
-      return $searchInput.removeClass('hidden');
+      $searchInput.find('.search-btn').text('Search by ' + srchText).attr('data-type', index);
+      return $searchInput.removeClass('hidden').addClass('open');
     });
     $('#reports').on('click', '.search-btn', function(e) {
       var $searchval, index, searchResults, searchValue;
@@ -76,17 +77,14 @@ Functions
       buildTable(searchResults);
       return $searchval.val('');
     });
-    $('#reports').on('click', '.reset-btn', function() {
-      if ($('.filter-input').hasClass('hidden')) {
-
-      } else {
-        $('.filter-input').addClass('hidden');
-      }
-      return buildTable(issueData);
+    $('#reports').on('click', '.cancel-search', function(e) {
+      var $searchInput;
+      e.preventDefault();
+      $searchInput = $(this).closest('#reports').find('.search-input');
+      return $searchInput.addClass('hidden').removeClass('show');
     });
     $('#reports').on('click', '#date-btn', function() {
-      console.log('button clicked');
-      return $('.date-row').removeClass('hidden');
+      return $('.date-row').removeClass('hidden').addClass('open');
     });
     $("#fromDate").datepicker({
       defaultDate: 0,
@@ -121,8 +119,7 @@ Functions
       'timeFormat': 'h:i A'
     });
     $('#reports').on('click', '#time-btn', function() {
-      console.log('button clicked');
-      return $('.time-row').removeClass('hidden');
+      return $('.time-row').removeClass('hidden').addClass('open');
     });
     $('#reports').on('click', '#cancel-time', function() {
       return $('.time-row').addClass('hidden');
@@ -134,6 +131,15 @@ Functions
       toTime = $("#toTime").val();
       filteredData = filter(issueData, "date", fromTime, toTime);
       return buildTable(filteredData);
+    });
+    $('#reports').on('click', '.reset-btn', function() {
+      if ($(this).closest('.container').find('.filter-input').hasClass('open')) {
+        console.log('whats up');
+        $(this).closest('.container').find('.filter-input').removeClass('open').addClass('hidden');
+      } else {
+        console.log('no reset');
+      }
+      return buildTable(issueData);
     });
   });
 

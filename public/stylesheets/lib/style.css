@@ -66,6 +66,24 @@ p {
   margin-right: auto;
   margin-left: auto;
 }
+.reset-row {
+  margin-top: 1%;
+  margin-bottom: 1%;
+}
+.filter-input {
+  margin-top: 1%;
+}
+.time-row,
+.date-row {
+  background-color: #f8f8f8;
+  border-color: #e7e7e7;
+  margin-right: auto;
+  margin-left: auto;
+}
+.time-row p,
+.date-row p {
+  text-align: right;
+}
 .chart {
   text-align: center;
 }

@@ -61,9 +61,10 @@ $ () ->
 	#Search menu select events
 	$('.search-menu').on 'click', () ->
 		index = $(@).attr('data-type')
+		srchText = $(@).text()
 		$searchInput = $(@).closest('#reports').find('.search-input')
-		$searchInput.find('.search-btn').text('Search by '+index).attr('data-type', index)
-		$searchInput.removeClass('hidden')
+		$searchInput.find('.search-btn').text('Search by '+srchText).attr('data-type', index)
+		$searchInput.removeClass('hidden').addClass('open')
 
 	$('#reports').on 'click', '.search-btn', (e) ->
 		e.preventDefault()
@@ -74,16 +75,14 @@ $ () ->
 		buildTable(searchResults)
 		$searchval.val('')
 
-	#reset filter button
-	$('#reports').on 'click', '.reset-btn', () ->
-		if $('.filter-input').hasClass('hidden')
-		else $('.filter-input').addClass('hidden')
-		buildTable(issueData)
+	$('#reports').on 'click', '.cancel-search', (e) ->
+		e.preventDefault()
+		$searchInput = $(@).closest('#reports').find('.search-input')
+		$searchInput.addClass('hidden').removeClass('show')
 
 	#filter by date range
 	$('#reports').on 'click', '#date-btn', () ->
-		console.log 'button clicked'
-		$('.date-row').removeClass('hidden')
+		$('.date-row').removeClass('hidden').addClass('open')
 
 	$("#fromDate").datepicker {
 		defaultDate: 0,
@@ -115,8 +114,7 @@ $ () ->
 	$('#toTime').timepicker({ 'timeFormat': 'h:i A' })
 
 	$('#reports').on 'click', '#time-btn', () ->
-		console.log 'button clicked'
-		$('.time-row').removeClass('hidden')
+		$('.time-row').removeClass('hidden').addClass('open')
 
 	$('#reports').on 'click', '#cancel-time', () ->
 		$('.time-row').addClass('hidden')
@@ -127,5 +125,14 @@ $ () ->
 		toTime = $("#toTime").val()
 		filteredData = filter(issueData, "date", fromTime, toTime)
 		buildTable(filteredData)
+
+	#reset filter button
+	$('#reports').on 'click', '.reset-btn', () ->
+		if $(@).closest('.container').find('.filter-input').hasClass('open')
+			console.log 'whats up'
+			$(@).closest('.container').find('.filter-input').removeClass('open').addClass('hidden')
+		else
+			console.log 'no reset'
+		buildTable(issueData)
 
 	return

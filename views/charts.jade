@@ -3,9 +3,10 @@ extends index
 block content
 	.container.chart.pie-chart
 		h1 Requests by User
-		canvas#pieChart(width="400", height="400")
+		div#pieChart(width="400", height="400")
 	hr
 	.container.chart.line-chart
-		h1 Request by Days of the Week
+		h1 Requests by Days of the Week
 		canvas#lineChart(width="800", height="400")
+		div#columnChart(width="800", height="400")
 	include footer
