@@ -72,6 +72,19 @@ IssueSchema = new mongoose.Schema {
 	comment: String
 }
 
+IssueSchema.pre 'save', (next) ->
+	htmlEntities = (str) ->
+		return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+	# loop over "this"
+	# find all strings
+	# encode strings
+	for index, i of @
+		if typeof i is 'string'
+			@[index] = htmlEntities(i)
+			console.log @[index]
+	console.log 'this', @
+	next()
+
 Issue = mongoose.model 'Issue', IssueSchema
 
 #instantiate the User database
@@ -155,7 +168,13 @@ io.sockets.on 'connection', (socket) ->
 			isComplete: false,
 			comment: 'None'
 		})
-		issue.save()
+		issue.save((err, issue) ->
+			if err
+				console.log 'errror'
+			else
+				console.log 'iss', issue
+				io.sockets.emit 'issue', issue
+				)
 		#Send an SMS text message via Twilio
 		###
 		client.sendMessage {
@@ -167,8 +186,7 @@ io.sockets.on 'connection', (socket) ->
 				console.log responseData.from
 				console.log responseData.body
 		###
-		io.sockets.emit 'issue', issue
-
+		
 	#socket event on edit
 	socket.on 'issueEditObj', (issueEditObj) ->
 		Issue.findByIdAndUpdate(issueEditObj.issueId, {
