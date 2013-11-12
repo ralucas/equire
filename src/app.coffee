@@ -14,8 +14,8 @@ client = require('twilio')('ACe1b7313b5b376f66c4db568dfa97e3e9', '1a3442ad88426e
 sys = require 'sys'
 childProcess = require 'child_process'
 _ = require 'underscore'
-WebSocket = require 'ws'
-WebSocketServer = require('ws').Server
+# WebSocket = require 'ws'
+# WebSocketServer = require('ws').Server
 
 app = express()
 
@@ -43,6 +43,10 @@ server = http.createServer(app)
 
 #start web socket server
 io = socketio.listen server
+
+io.configure () ->
+	io.set "transports", ["xhr-polling"]
+	io.set "polling duration", 10
 
 #connect mongoose
 MongoURL = process.env.MONGOHQ_URL ? 'mongodb://localhost'
@@ -298,16 +302,17 @@ app.get '/charts', (req, res) ->
 	res.render 'charts', {user: req.user}
 
 #websockets for heroku
-wss = new WebSocketServer {server: server}
-console.log 'websocket server created'
-wss.on 'connection', (ws) ->
-	id = setInterval( () -> 
-    	ws.send(JSON.stringify(new Date()), () -> )
-  		, 1000)
-	console.log 'websocket connection open'
-	ws.on 'close', () ->
-		console.log 'websocket connection close'
-		clearInterval(id)
+# wss = new WebSocketServer {server: server}
+# console.log 'websocket server created'
+# wss.on 'connection', (ws) ->
+# 	id = setInterval( () -> 
+#     	ws.send(JSON.stringify(new Date()), () -> )
+#   		, 1000)
+# 	console.log 'websocket connection open'
+# 	ws.on 'close', () ->
+# 		console.log 'websocket connection close'
+# 		clearInterval(id)
+
 
 #get and listen to server
 server.listen(app.get('port'), () ->
