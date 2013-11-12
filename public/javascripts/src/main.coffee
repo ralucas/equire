@@ -5,6 +5,13 @@ $ () ->
 	socket.on 'connect', () ->
 		console.log 'hello sockets connected'
 
+	host = location.origin.replace /^http/, 'ws'
+	ws = new WebSocket host
+	ws.onmessage = (event) ->
+		li = document.createElement 'li'
+		li.innerHTML = JSON.parse event.data
+		document.querySelector('#pings').appendChild li
+
 	###
 	Functions
 	###
