@@ -28,38 +28,56 @@ Functions
       _results = [];
       for (_i = 0, _len = arr.length; _i < _len; _i++) {
         each = arr[_i];
-        _results.push($('#reportsBody').append('<tr class="issueRow" data-id=' + each['_id'] + '>' + '<td class="displayName">' + each['displayName'] + '</td>' + '<td class="issueTime" data-time=' + each['timeStamp'] + '>' + each['time'] + '</td>' + '</td><td class="waitTime">' + moment().minutes(each['totalWait']) + '</td>' + '<td>' + each['lesson'] + '</td>' + '<td>' + each['issue'] + '</td>' + '<td>' + each['comment'] + '</td>' + '</tr>'));
+        _results.push($('#reportsBody').append('<tr class="issueRow" data-id=' + each['_id'] + '>' + '<td class="displayName">' + each['displayName'] + '</td>' + '<td class="issueTime" data-time=' + each['timeStamp'] + '>' + each['time'] + '</td>' + '<td class="waitTime">' + moment().minutes(each['totalWait']) + '</td>' + '<td>' + each['lesson'] + '</td>' + '<td>' + each['issue'] + '</td>' + '<td>' + each['comment'] + '</td>' + '</tr>'));
       }
       return _results;
     };
     totalsBuild = function(arr) {
-      var avg, avgWait, countDate, dates, daysCount, each, sumWait, totalIssues, _i, _len;
+      var avg, avgWait, countComms, countDate, countDay, countNames, countTerms, dates, dayObj, days, each, mostComm, mostDate, mostStudent, mostTerm, names, reqComms, reqTerms, strComms, strNames, strTerms, sumWait, totalIssues, _i, _len;
       totalIssues = arr.length;
       sumWait = _.reduce(arr, (function(memo, index) {
         return memo + index['totalWait'];
       }), 0);
       avg = sumWait / totalIssues;
       avgWait = Math.round(avg / 60);
-      console.log('aw', avgWait);
       countDate = _.countBy(arr, 'date');
+      mostDate = _.pick(_.invert(countDate), _.max(countDate));
       dates = _.pluck(arr, 'date');
+      days = [];
       for (_i = 0, _len = dates.length; _i < _len; _i++) {
         each = dates[_i];
         days.push(moment(each).format('dddd'));
       }
-      daysCount = _.countBy(days);
+      countDay = _.countBy(days);
+      dayObj = _.pick(_.invert(countDay), _.max(countDay));
+      reqTerms = _.pluck(arr, 'issue');
+      strTerms = reqTerms.join(' ').split(' ');
+      countTerms = _.countBy(strTerms);
+      mostTerm = _.pick(_.invert(countTerms), _.max(countTerms));
+      reqComms = _.pluck(arr, 'comment');
+      strComms = reqTerms.join(' ').split(' ');
+      countComms = _.countBy(strComms);
+      mostComm = _.pick(_.invert(countComms), _.max(countComms));
+      names = _.pluck(arr, 'displayName');
+      strNames = names.join(' ').split(' ');
+      countNames = _.countBy(strNames);
+      mostStudent = _.pick(_.invert(countNames), _.max(countNames));
       totalsObj = {
         totalIssues: totalIssues,
         avgWait: avgWait,
-        countDate: countDate,
-        countDay: countDay,
-        countTerm: countTerm,
-        countStudent: countStudent
+        mostDate: mostDate,
+        mostDay: dayObj,
+        mostTerm: _.values(mostTerm).join(),
+        mostComm: _.values(mostComm).join(),
+        mostStudent: _.values(mostStudent).join()
       };
       return totalsTable(totalsObj);
     };
     totalsTable = function(obj) {
-      return $('#summaryBody').empty();
+      $('#summaryBody').empty();
+      $('#summaryBody').append('<tr class="summaryRow">' + '<td>' + obj['totalIssues'] + '</td>' + '<td>' + obj['avgWait'] + '</td>' + '<td>' + _.keys(obj['mostDate']).join() + '</td>' + '<td>' + _.keys(obj['mostDay']).join() + '</td>' + '<td>' + obj['mostTerm'] + '</td>' + '<td>' + obj['mostComm'] + '</td>' + '<td>' + obj['mostStudent'] + '</td>' + '</tr>');
+      $('#summaryHeaders').find('.date-thead').text('Date with Most Requests: ' + _.values(obj['mostDate']).join());
+      return $('#summaryHeaders').find('.day-thead').text('Day with Most Requests: ' + _.values(obj['mostDay']).join());
     };
     $.get('/reportsInfo', function(data) {
       issueData = data;

@@ -22,7 +22,7 @@ $ () ->
 			$('#reportsBody').append('<tr class="issueRow" data-id='+each['_id']+'>'+
 					'<td class="displayName">'+each['displayName']+'</td>'+
 					'<td class="issueTime" data-time='+each['timeStamp']+'>'+each['time']+'</td>'+
-					'</td><td class="waitTime">'+moment().minutes(each['totalWait'])+'</td>'+
+					'<td class="waitTime">'+moment().minutes(each['totalWait'])+'</td>'+
 					'<td>'+each['lesson']+'</td>'+
 					'<td>'+each['issue']+'</td>'+
 					'<td>'+each['comment']+'</td>'+
@@ -30,31 +30,64 @@ $ () ->
 
 	#builds totals object
 	totalsBuild = (arr) ->
+		#total issues
 		totalIssues = arr.length
+		#avg wait time
 		sumWait = _.reduce arr, ((memo, index) -> 
 			memo + index['totalWait']),0
 		avg = sumWait/totalIssues
 		avgWait = Math.round(avg/60)
-		console.log 'aw', avgWait
+		#requests by date
 		countDate = _.countBy(arr, 'date')
+		mostDate = _.pick(_.invert(countDate), _.max(countDate))
+		#requests by days
 		dates = _.pluck(arr, 'date')
+		days = []
 		for each in dates
 			days.push(moment(each).format('dddd'))
-		daysCount = _.countBy(days)
-
+		countDay = _.countBy(days)
+		dayObj = _.pick(_.invert(countDay), _.max(countDay))
+		#most term in requests
+		reqTerms = _.pluck(arr, 'issue')
+		strTerms = reqTerms.join(' ').split(' ')
+		countTerms = _.countBy(strTerms)
+		mostTerm = _.pick(_.invert(countTerms), _.max(countTerms))
+		#most term in comments
+		reqComms = _.pluck(arr, 'comment')
+		strComms = reqTerms.join(' ').split(' ')
+		countComms = _.countBy(strComms)
+		mostComm = _.pick(_.invert(countComms), _.max(countComms))
+		#student with most requests
+		names = _.pluck(arr, 'displayName')
+		strNames = names.join(' ').split(' ')
+		countNames = _.countBy(strNames)
+		mostStudent = _.pick(_.invert(countNames), _.max(countNames))
+		#total object
 		totalsObj = {
 			totalIssues : totalIssues,
 			avgWait : avgWait,
-			countDate : countDate,
-			countDay : countDay,
-			countTerm : countTerm,
-			countStudent : countStudent
+			mostDate : mostDate,
+			mostDay : dayObj,
+			mostTerm : _.values(mostTerm).join(),
+			mostComm : _.values(mostComm).join(),
+			mostStudent : _.values(mostStudent).join()
 		}
 		totalsTable(totalsObj)
 
 	#builds totals table on page
 	totalsTable = (obj) ->
 		$('#summaryBody').empty()
+		$('#summaryBody').append('<tr class="summaryRow">'+
+			'<td>'+obj['totalIssues']+'</td>'+
+			'<td>'+obj['avgWait']+'</td>'+
+			'<td>'+_.keys(obj['mostDate']).join()+'</td>'+
+			'<td>'+_.keys(obj['mostDay']).join()+'</td>'+
+			'<td>'+obj['mostTerm']+'</td>'+
+			'<td>'+obj['mostComm']+'</td>'+
+			'<td>'+obj['mostStudent']+'</td>'+
+			'</tr>')
+		$('#summaryHeaders').find('.date-thead').text('Date with Most Requests: '+_.values(obj['mostDate']).join())
+		$('#summaryHeaders').find('.day-thead').text('Day with Most Requests: '+_.values(obj['mostDay']).join())
 
 	#get all historical data
 	$.get '/reportsInfo', (data) ->

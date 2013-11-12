@@ -20,15 +20,15 @@ $.get '/pieChart', (data) ->
 			data : values
 		}
 		pieData.push(obj)
-	$('#pieChart').highcharts({
+	$('#pieChart').highcharts {
 		chart: {
 			type: 'pie'
 		},
 		title: {
 			text: 'Requests by User'
-			},
+		},
 		series: pieData
-		})
+	}
 
 #Line Chart for Requests by days of the week
 $.get '/lineChart', (data) ->
@@ -45,7 +45,7 @@ $.get '/lineChart', (data) ->
 		}
 		columnData.push(obj)
 	console.log columnData
-	$('#columnChart').highcharts({
+	$('#columnChart').highcharts {
 		chart: {
 			type: 'column'
 		},
@@ -64,7 +64,7 @@ $.get '/lineChart', (data) ->
 			tickInterval: 1
 		},
 		series: columnData
-	})
+	}
 	lineData = {
 		labels : days,
 		datasets : [
