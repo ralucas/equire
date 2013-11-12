@@ -18,19 +18,20 @@ block content
 						li.divider
 						li <a href="/logout">Sign Out</a>		
 	.container#teacherInput
-		.row
-			h1 Welcome teacher
-			p.lead Please input today's lesson
+		.row.lessonrow
+			h1 Welcome #{user.displayName}
 			p#date
-		form(role="form")#lessonForm
-			.form-group
-				label(for="inputLesson") Lesson
-				input.form-control#lessonInput(type="text", placeholder="Enter lesson")
-			.form-group
-				label(for="inputFile") Upload Lesson plan
-				input#inputFile(type="file")
-				p.help-block JSON format preferred or .docx, .pdf, .odt, .xls
-			button.btn.btn-primary.btn-lg#tchr-sub-btn(type="submit") Submit
+			button.btn.btn-success.btn-lg.hidden#change-lesson(type="button") Update Lesson Plan
+			form(role="form")#lessonForm
+				p.lead Please input today's lesson
+				.form-group
+					label(for="inputLesson") Lesson
+					input.form-control#lessonInput(type="text", placeholder="Enter lesson")
+				//- .form-group
+				//- 	label(for="inputFile") Upload Lesson plan
+				//- 	input#inputFile(type="file")
+				//- 	p.help-block JSON format preferred or .docx, .pdf, .odt, .xls
+				button.btn.btn-primary.btn-lg#tchr-sub-btn(type="submit") Submit
 	section
 		.container#helprequests
 			h1#helptitle Help Requests

@@ -154,14 +154,24 @@ $ () ->
 
 	$('#teacherInput').on 'submit', $('#lessonForm'), (e) ->
 		e.preventDefault()
+		username = $(@).closest('body').find('#user-dropdown a').attr('data-id')
+		displayName = $(@).closest('body').find('#user-dropdown a').attr('data-user')
 		todaysDate = $(@).closest('#teacherInput').find('#date').attr('data-date')
 		lessonInput = $(@).find('#lessonInput').val()
-		if lessonInput then $(@).closest('#teacherInput').slideUp() else alert 'Please enter a lesson plan'
-		lessonUpdate = {
-			date : todaysDate,
-			lesson : lessonInput
+		if lessonInput then $(@).find('#lessonForm').slideUp() and $(@).closest('#teacherInput').find('#change-lesson').removeClass('hidden')
+		else 
+			alert 'Please enter a lesson plan'
+		lessonObj = {
+			lesson : lessonInput,
+			username : username,
+			displayName : displayName
 		}
-		socket.emit 'lessonUpdate', lessonUpdate
+		$(@).find('#lessonInput').val('')
+		socket.emit 'lessonObj', lessonObj
+
+	$('#teacherInput').on 'click', '#change-lesson', () ->
+		$(@).addClass('hidden')
+		$(@).closest('#teacherInput').find('#lessonForm').slideDown()
 
 	#receive incomplete issues and load them into Help Requests
 	$.get '/found', (data) ->

@@ -10,3 +10,4 @@ To Do for Help Requester
 8. Page speed issues
 	* Get images optimized
 	* minify css and js
+9. Administrator dashboard to manage student and teacher users

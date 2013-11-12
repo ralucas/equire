@@ -146,20 +146,28 @@
 
     $('#date').text(today).attr('data-date', today);
     $('#teacherInput').on('submit', $('#lessonForm'), function(e) {
-      var lessonInput, lessonUpdate, todaysDate;
+      var displayName, lessonInput, lessonObj, todaysDate, username;
       e.preventDefault();
+      username = $(this).closest('body').find('#user-dropdown a').attr('data-id');
+      displayName = $(this).closest('body').find('#user-dropdown a').attr('data-user');
       todaysDate = $(this).closest('#teacherInput').find('#date').attr('data-date');
       lessonInput = $(this).find('#lessonInput').val();
       if (lessonInput) {
-        $(this).closest('#teacherInput').slideUp();
+        $(this).find('#lessonForm').slideUp() && $(this).closest('#teacherInput').find('#change-lesson').removeClass('hidden');
       } else {
         alert('Please enter a lesson plan');
       }
-      lessonUpdate = {
-        date: todaysDate,
-        lesson: lessonInput
+      lessonObj = {
+        lesson: lessonInput,
+        username: username,
+        displayName: displayName
       };
-      return socket.emit('lessonUpdate', lessonUpdate);
+      $(this).find('#lessonInput').val('');
+      return socket.emit('lessonObj', lessonObj);
+    });
+    $('#teacherInput').on('click', '#change-lesson', function() {
+      $(this).addClass('hidden');
+      return $(this).closest('#teacherInput').find('#lessonForm').slideDown();
     });
     $.get('/found', function(data) {
       var eachIssue, _i, _len, _results;

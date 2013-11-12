@@ -79,12 +79,23 @@ UserSchema = new mongoose.Schema {
 	_id:{type: String, required: true}
 	openId: String,
 	displayName: String,
-	emails: String
+	emails: String,
+	isTeacher: Boolean,
 }
 
-#UserSchema.plugin(findOrCreate);
-
 User = mongoose.model 'User', UserSchema
+
+#instantiate the Lesson database
+LessonSchema = new mongoose.Schema {
+	lesson : String,
+	username: String,
+	displayName: String,
+	date: Object,
+	timeStamp: Object,
+	time: Object
+}
+
+Lesson = mongoose.model 'Lesson', LessonSchema
 
 #passport Google setup
 ip = process.env.IP ? 'http://localhost:3000'
@@ -104,7 +115,8 @@ passport.use new GoogleStrategy {
 					openId: identifier,
 					_id: profile.emails[0]['value'],
 					displayName: profile.displayName,
-					emails: profile.emails[0]['value']
+					emails: profile.emails[0]['value'],
+					isTeacher: false
 				}, (err, user) ->
 					done err, user[0]
 					return
@@ -121,7 +133,7 @@ app.get '/auth/google', passport.authenticate 'google'
 
 app.get '/auth/google/return', passport.authenticate 'google', {
 	session: true,
-	successRedirect: '/student',
+	successRedirect: '/account',
 	failureRedirect: '/'}
 
 #sockets on connection
@@ -195,10 +207,23 @@ io.sockets.on 'connection', (socket) ->
 					)
 		io.sockets.emit 'completeObj', completeObj
 
-	#socket event on lesson input, updates all requests from that day
-	#need to get it to work for all going forward, set a default for that day
+	#socket event on lesson input
+	socket.on 'lessonObj', (lessonObj) ->
+		date = moment().format('L')
+		timeStamp = moment().format('X')
+		current_time = moment().format('lll')
+		lesson = new Lesson({
+			lesson: lessonObj.lesson,
+			username: lessonObj.username,
+			displayName: lessonObj.displayName,
+			date: date,
+			timeStamp: timeStamp,
+			time: current_time
+		})
+		lesson.save()
+
 	socket.on 'lessonUpdate', (lessonUpdate) ->
-		Issue.update({ date: lessonUpdate.date }, {lesson : lessonUpdate.lesson}, 
+		Lesson.update({ date: lessonUpdate.date }, {lesson : lessonUpdate.lesson}, 
 			(err, numberAffected, raw) ->
 				if err then console.log 'ERROR' else
 				console.log 'The number of updated docs was ', numberAffected
@@ -219,6 +244,12 @@ Data Manipulation
 #splash page
 app.get '/', (req, res) ->
 	res.render 'login', {user: req.user}
+
+app.get '/account', (req, res) ->
+	if req.user.isTeacher is false
+		res.redirect '/student'
+	else
+		res.redirect '/teacher'
 
 ###
 Student Routing
@@ -258,7 +289,9 @@ Teacher Routing
 ###
 
 app.get '/teacher', (req, res) ->
-	res.render 'teacher', {user: req.user}
+	if req.user.isTeacher is false then res.redirect '/student'
+	else
+		res.render 'teacher', {user: req.user}
 
 #look for incomplete issues and send them to the client
 app.get '/found', (req, res) ->
@@ -267,7 +300,9 @@ app.get '/found', (req, res) ->
 			res.send issues
 
 app.get '/reports', (req, res) ->
-	res.render 'reports', {user: req.user}
+	if req.user.isTeacher is false then res.redirect '/student'
+	else
+		res.render 'reports', {user: req.user}
 
 app.get '/reportsInfo', (req, res) ->
 	Issue.find {}, (err, issues) ->
@@ -299,7 +334,9 @@ app.get '/lineChart', (req, res) ->
 		)
 
 app.get '/charts', (req, res) ->
-	res.render 'charts', {user: req.user}
+	if req.user.isTeacher is false then res.redirect '/student'
+	else
+		res.render 'charts', {user: req.user}
 
 #websockets for heroku
 # wss = new WebSocketServer {server: server}

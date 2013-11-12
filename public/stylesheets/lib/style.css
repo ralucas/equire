@@ -37,6 +37,10 @@ p {
   max-width: 200px;
   font-size: 10px;
 }
+.lessonrow button {
+  margin-right: auto;
+  margin-left: auto;
+}
 #reports {
   text-align: center;
 }
