@@ -11,6 +11,7 @@ Functions
 issueData = []
 sortedData = []
 filteredData = []
+totalsObj = {}
 
 $ () ->
 
@@ -27,15 +28,39 @@ $ () ->
 					'<td>'+each['comment']+'</td>'+
 					'</tr>')
 
-	#builds totals table
-	# totalTable = (arr) ->
-	# 	$('#summaryBody').empty()
-	# 	_.countBy(arr, )
+	#builds totals object
+	totalsBuild = (arr) ->
+		totalIssues = arr.length
+		sumWait = _.reduce arr, ((memo, index) -> 
+			memo + index['totalWait']),0
+		avg = sumWait/totalIssues
+		avgWait = Math.round(avg/60)
+		console.log 'aw', avgWait
+		countDate = _.countBy(arr, 'date')
+		dates = _.pluck(arr, 'date')
+		for each in dates
+			days.push(moment(each).format('dddd'))
+		daysCount = _.countBy(days)
+
+		totalsObj = {
+			totalIssues : totalIssues,
+			avgWait : avgWait,
+			countDate : countDate,
+			countDay : countDay,
+			countTerm : countTerm,
+			countStudent : countStudent
+		}
+		totalsTable(totalsObj)
+
+	#builds totals table on page
+	totalsTable = (obj) ->
+		$('#summaryBody').empty()
 
 	#get all historical data
 	$.get '/reportsInfo', (data) ->
 		issueData = data
 		buildTable(issueData)
+		totalsBuild(issueData)
 			
 	#sorts on header click
 	$('th').each () ->

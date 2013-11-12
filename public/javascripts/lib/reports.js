@@ -10,7 +10,7 @@ Functions
 
 
 (function() {
-  var filteredData, issueData, sortedData;
+  var filteredData, issueData, sortedData, totalsObj;
 
   issueData = [];
 
@@ -18,8 +18,10 @@ Functions
 
   filteredData = [];
 
+  totalsObj = {};
+
   $(function() {
-    var buildTable, filter;
+    var buildTable, filter, totalsBuild, totalsTable;
     buildTable = function(arr) {
       var each, _i, _len, _results;
       $('#reportsBody').empty();
@@ -30,9 +32,39 @@ Functions
       }
       return _results;
     };
+    totalsBuild = function(arr) {
+      var avg, avgWait, countDate, dates, daysCount, each, sumWait, totalIssues, _i, _len;
+      totalIssues = arr.length;
+      sumWait = _.reduce(arr, (function(memo, index) {
+        return memo + index['totalWait'];
+      }), 0);
+      avg = sumWait / totalIssues;
+      avgWait = Math.round(avg / 60);
+      console.log('aw', avgWait);
+      countDate = _.countBy(arr, 'date');
+      dates = _.pluck(arr, 'date');
+      for (_i = 0, _len = dates.length; _i < _len; _i++) {
+        each = dates[_i];
+        days.push(moment(each).format('dddd'));
+      }
+      daysCount = _.countBy(days);
+      totalsObj = {
+        totalIssues: totalIssues,
+        avgWait: avgWait,
+        countDate: countDate,
+        countDay: countDay,
+        countTerm: countTerm,
+        countStudent: countStudent
+      };
+      return totalsTable(totalsObj);
+    };
+    totalsTable = function(obj) {
+      return $('#summaryBody').empty();
+    };
     $.get('/reportsInfo', function(data) {
       issueData = data;
-      return buildTable(issueData);
+      buildTable(issueData);
+      return totalsBuild(issueData);
     });
     $('th').each(function() {
       return $(this).on('click', function() {
