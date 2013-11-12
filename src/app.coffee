@@ -210,9 +210,6 @@ Data Manipulation
 # 		console.log 'is', issueCount
 # 	)
 
-
-
-
 #splash page
 app.get '/', (req, res) ->
 	res.render 'login', {user: req.user}
