@@ -1,6 +1,22 @@
-extends index
+extends layout
 
 block content
+	header.navbar.navbar-default.navbar-fixed-top(role="navigation")
+		.container
+			.navbar-header
+				a.navbar-brand(href="/") Requester
+			ul.nav.navbar-nav.navbar-right
+				li <a href="/reports">Reports</a>
+				li <a href="/charts">Charts</a>
+			ul.nav.navbar-nav.navbar-right.pull-right
+				li.dropdown#user-dropdown
+					a.dropdown-toggle(href="/teacher", data-id="#{user._id}", data-toggle="dropdown", data-user="#{user.displayName}") #{user.displayName}<b class="caret"></b></a>
+					ul.dropdown-menu
+						li <a href="/teacher">Teacher Home</a>
+						li <a href="/reports">Reports</a>
+						li <a href="/charts">Charts</a>
+						li.divider
+						li <a href="/logout">Sign Out</a>
 	.container.chart.pie-chart
 		h1 Requests by User
 		div#pieChart(width="400", height="400")
