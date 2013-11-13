@@ -1,8 +1,17 @@
 body {
   padding-top: 50px;
 }
+.inner-footer {
+  border-top: solid 1px #cecece;
+  padding-bottom: 10px;
+  padding-left: 0px;
+  margin: auto;
+  background-color: #fff;
+}
 .footer-bar {
-  margin-bottom: 0px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
 #user-dropdown {
   float: right;
