@@ -103,7 +103,8 @@ LessonSchema = new mongoose.Schema {
 	displayName: String,
 	date: Object,
 	timeStamp: Object,
-	time: Object
+	time: Object,
+	relIssues: Object
 }
 
 LessonSchema.pre 'save', (next) ->

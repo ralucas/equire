@@ -5,6 +5,9 @@ body {
 #user-dropdown {
   float: right;
 }
+#heart {
+  color: #f00;
+}
 #teacherInput h1,
 h2,
 p {
