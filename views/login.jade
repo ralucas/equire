@@ -4,7 +4,7 @@ block header
 	header.navbar.navbar-default.navbar-fixed-top(role="navigation")
 		.container
 			.navbar-header
-				a.navbar-brand.pull-left(href="/") Requester
+				a.navbar-brand.pull-left(href="/") Help Requester
 			.collapse.navbar-collapse#bs-example-navbar-collapse-1
 				ul.nav.navbar-nav.navbar-right
 					li
@@ -13,20 +13,25 @@ block content
 	section#first
 		section.jumbotron#hero
 			.container
-				h1.col-md-8#login-title Welcome to Requester
+				h1.col-md-8#login-title Welcome to Help Requester
 				aside.signins.col-md-4
 					p.signin-btn#goog-btn <a class="btn btn-lg btn-success" href="/auth/google"> Sign In with Google</a>
 					//- p.signin-btn#face-btn <a class="btn btn-lg btn-primary" href="#"> Sign In with Facebook</a>
 					//- p.signin-btn#git-btn <a class="btn btn-lg btn-default" href="#"> Sign In with Github</a>
-	section#second
+	section.text-section#second
 		.container
-			.row.col-md-4
-				h2 Who we are
-				p Bacon ipsum dolor sit amet cow frankfurter turducken pork chop shoulder filet mignon sausage brisket shankle flank. Prosciutto jerky bacon kevin tail pig sirloin leberkas. Tri-tip chuck pancetta, pork ribeye frankfurter kevin. Flank tri-tip ham hock, corned beef spare ribs shank jerky short ribs salami fatback bresaola pastrami tongue. Beef ribs pork strip steak chuck tri-tip rump. Swine tenderloin jowl pancetta beef kevin cow ham boudin corned beef jerky leberkas chicken spare ribs flank. Filet mignon tail drumstick, pork loin beef ribs shankle tenderloin ham short loin shank pig ball tip shoulder. Spare ribs meatloaf shoulder swine tongue jowl.
-			.row.col-md-4
-				h2 Why you love us
-				p Bacon ipsum dolor sit amet cow frankfurter turducken pork chop shoulder filet mignon sausage brisket shankle flank. Prosciutto jerky bacon kevin tail pig sirloin leberkas. Tri-tip chuck pancetta, pork ribeye frankfurter kevin. Flank tri-tip ham hock, corned beef spare ribs shank jerky short ribs salami fatback bresaola pastrami tongue. Beef ribs pork strip steak chuck tri-tip rump. Swine tenderloin jowl pancetta beef kevin cow ham boudin corned beef jerky leberkas chicken spare ribs flank. Filet mignon tail drumstick, pork loin beef ribs shankle tenderloin ham short loin shank pig ball tip shoulder. Spare ribs meatloaf shoulder swine tongue jowl.
-			.row.col-md-4
-				h2 News
-				p Bacon ipsum dolor sit amet cow frankfurter turducken pork chop shoulder filet mignon sausage brisket shankle flank. Prosciutto jerky bacon kevin tail pig sirloin leberkas. Tri-tip chuck pancetta, pork ribeye frankfurter kevin. Flank tri-tip ham hock, corned beef spare ribs shank jerky short ribs salami fatback bresaola pastrami tongue. Beef ribs pork strip steak chuck tri-tip rump. Swine tenderloin jowl pancetta beef kevin cow ham boudin corned beef jerky leberkas chicken spare ribs flank. Filet mignon tail drumstick, pork loin beef ribs shankle tenderloin ham short loin shank pig ball tip shoulder. Spare ribs meatloaf shoulder swine tongue jowl.
+			.row.col-md-5
+				h2 What is Help Requester?
+				p.lead An easy-to-use application for students to request help in real-time from teachers. A simple way for busy teachers to keep track of and respond to requests.
+			.row.col-md-2
+			.row.col-md-5
+				h2 How it Works
+				p.lead Simply login and either hit the big green button to request teacher help or fill-in the form to give more information. The teacher then is able to see that real-time request and respond.
+	section.text-section#third
+		.container
+			.row
+				h2 More Features
+				p.lead Includes reporting and charting features for educators and administrators,<br> enabling the user to visualize patterns and see what's going on in the classroom.
+				h2 It's free to try
+				p.lead Go ahead and login using your Google login.
 	include footer

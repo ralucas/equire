@@ -65,7 +65,6 @@ IssueSchema = new mongoose.Schema {
 	issue: String,
 	username: String,
 	displayName: String,
-	lesson: String,
 	date: Object,
 	timeStamp: Object,
 	time: Object,
