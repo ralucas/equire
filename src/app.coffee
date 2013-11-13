@@ -330,6 +330,11 @@ app.get '/reports', (req, res) ->
 	else
 		res.render 'reports', {user: req.user}
 
+app.get '/summary', (req, res) ->
+	if req.user.isTeacher is false then res.redirect '/student'
+	else
+		res.render 'summary', {user: req.user}
+
 app.get '/reportsInfo', (req, res) ->
 	Issue.find {}, (err, issues) ->
 		if err then console.log 'ERROR' else

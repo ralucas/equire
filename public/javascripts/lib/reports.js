@@ -23,7 +23,7 @@ Functions
   totalsObj = {};
 
   $(function() {
-    var buildTable, filter, filterTime, totalsBuild, totalsTable;
+    var buildSummaryTable, buildTable, filter, filterTime, totalsBuild, totalsTable;
     buildTable = function(arr) {
       var each, _i, _len, _results;
       $('#reportsBody').empty();
@@ -95,7 +95,6 @@ Functions
         if ($(this).hasClass('sorted')) {
           $(this).addClass('reverse').removeClass('sorted');
           rsd = sortedData.reverse();
-          console.log('rsd', rsd);
           return buildTable(rsd);
         } else {
           $(this).addClass('sorted').removeClass('reverse');
@@ -103,7 +102,6 @@ Functions
           sortedData = _.sortBy(issueData, function(arr) {
             return arr[value];
           });
-          console.log('sd', sortedData);
           return buildTable(sortedData);
         }
       });
@@ -124,9 +122,6 @@ Functions
       output = [];
       for (_i = 0, _len = arr.length; _i < _len; _i++) {
         each = arr[_i];
-        console.log(value1);
-        console.log(value2);
-        console.log(moment(each[key]).format('HH:mm:ss'));
         if (moment(each[key]).format('HH:mm:ss') >= value1 && moment(each[key]).format('HH:mm:ss') <= value2) {
           output.push(each);
         }
@@ -216,6 +211,32 @@ Functions
         console.log('no reset');
       }
       return buildTable(issueData);
+    });
+    buildSummaryTable = function(arr, key, headings) {
+      var $sumTable, each, qty, requestsCount, _results;
+      $sumTable = $('#summaryReports').find('#summaryReportsTable');
+      $sumTable.find('thead').empty();
+      $sumTable.find('tbody').empty();
+      $sumTable.find('thead').append('<tr><th>' + headings[0] + '</th>' + '<th>' + headings[1] + '</th></tr>');
+      requestsCount = _.countBy(issueData, key);
+      _results = [];
+      for (each in requestsCount) {
+        qty = requestsCount[each];
+        _results.push($sumTable.find('tbody').append('<tr>' + '<td>' + each + '</td>' + '<td>' + qty + '</td></tr>'));
+      }
+      return _results;
+    };
+    $('#userSumBtn').on('click', function() {
+      return buildSummaryTable(issueData, 'displayName', ['Name', 'Number of Requests']);
+    });
+    $('#dateSumBtn').on('click', function() {
+      return buildSummaryTable(issueData, 'date', ['Date', 'Number of Requests']);
+    });
+    $('#summResetBtn').on('click', function() {
+      var $sumTable;
+      $sumTable = $(this).closest('#summaryReports').find('#summaryReportsTable');
+      $sumTable.find('thead').empty();
+      return $sumTable.find('tbody').empty();
     });
   });
 

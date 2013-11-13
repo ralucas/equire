@@ -105,14 +105,12 @@ $ () ->
 			if $(@).hasClass('sorted')
 				$(@).addClass('reverse').removeClass('sorted')
 				rsd = sortedData.reverse()
-				console.log 'rsd', rsd
 				buildTable(rsd)
 			else
 				$(@).addClass('sorted').removeClass('reverse')
 				value = $(@).attr('data-type')
 				sortedData = _.sortBy(issueData, (arr) ->
 					return arr[value])
-				console.log 'sd', sortedData
 				buildTable(sortedData)
 
 	#filter data
@@ -126,18 +124,10 @@ $ () ->
 	filterTime = (arr, key, value1, value2) ->
 		output = []
 		for each in arr
-			console.log value1
-			console.log value2
-			console.log moment(each[key]).format('HH:mm:ss')
 			if moment(each[key]).format('HH:mm:ss') >= value1 and moment(each[key]).format('HH:mm:ss') <= value2
 				output.push(each)
 		return output
 	
-	#totals
-	
-
-	
-
 	###
 	Filter/Search by name, date, time range, time waited, lesson, issue, comment
 	###
@@ -216,5 +206,29 @@ $ () ->
 		else
 			console.log 'no reset'
 		buildTable(issueData)
+
+	#student summary report
+	buildSummaryTable = (arr, key, headings) ->
+		$sumTable = $('#summaryReports').find('#summaryReportsTable')
+		$sumTable.find('thead').empty()
+		$sumTable.find('tbody').empty()
+		$sumTable.find('thead').append('<tr><th>'+headings[0]+'</th>'+
+			'<th>'+headings[1]+'</th></tr>')
+		requestsCount = _.countBy(issueData, key)
+		for each, qty of requestsCount
+			$sumTable.find('tbody').append('<tr>'+
+				'<td>'+each+'</td>'+
+				'<td>'+qty+'</td></tr>')
+
+	$('#userSumBtn').on 'click', () ->
+		buildSummaryTable(issueData, 'displayName', ['Name', 'Number of Requests'])
+
+	$('#dateSumBtn').on 'click', () ->
+		buildSummaryTable(issueData, 'date', ['Date', 'Number of Requests'])
+
+	$('#summResetBtn').on 'click', () ->
+		$sumTable = $(@).closest('#summaryReports').find('#summaryReportsTable')
+		$sumTable.find('thead').empty()
+		$sumTable.find('tbody').empty()
 
 	return

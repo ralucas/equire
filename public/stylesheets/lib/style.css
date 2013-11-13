@@ -12,12 +12,10 @@ p {
 }
 #teacherInput {
   width: 50%;
+  text-align: center;
 }
 .help-block {
   text-align: left;
-}
-#tchr-sub-btn {
-  text-align: center;
 }
 #helptitle {
   text-align: center;
@@ -34,10 +32,6 @@ p {
 .commentbox {
   max-width: 200px;
   font-size: 10px;
-}
-.lessonrow button {
-  margin-right: auto;
-  margin-left: auto;
 }
 #reports {
   text-align: center;
@@ -85,6 +79,30 @@ p {
 .time-row p,
 .date-row p {
   text-align: right;
+}
+#summaryHeaders th {
+  text-align: center;
+}
+#summaryReportsTable {
+  margin-right: auto;
+  margin-left: auto;
+  width: 50%;
+  text-align: center;
+}
+#summaryReports {
+  text-align: center;
+  margin-top: 1%;
+}
+#summaryReportsTable th {
+  text-align: center;
+}
+#summResetBtn {
+  display: block;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1%;
+  margin-bottom: 1%;
 }
 .chart {
   text-align: center;
