@@ -118,6 +118,16 @@ $ () ->
 			if each[key] >= value1 and each[key] <= value2
 				output.push(each)
 		return output
+
+	filterTime = (arr, key, value1, value2) ->
+		output = []
+		for each in arr
+			console.log value1
+			console.log value2
+			console.log moment(each[key]).format('HH:mm:ss')
+			if moment(each[key]).format('HH:mm:ss') >= value1 and moment(each[key]).format('HH:mm:ss') <= value2
+				output.push(each)
+		return output
 	
 	#totals
 	
@@ -180,8 +190,8 @@ $ () ->
 		buildTable(filteredData)
 
 	#filter by time
-	$('#fromTime').timepicker({ 'timeFormat': 'h:i A' })
-	$('#toTime').timepicker({ 'timeFormat': 'h:i A' })
+	$('#fromTime').timepicker({ 'timeFormat': 'H:i:s' })
+	$('#toTime').timepicker({ 'timeFormat': 'H:i:s' })
 
 	$('#reports').on 'click', '#time-btn', () ->
 		$('.time-row').removeClass('hidden').addClass('open')
@@ -190,16 +200,14 @@ $ () ->
 		$('.time-row').addClass('hidden')
 
 	$('#reports').on 'click', '#submit-time', () ->
-		fromTime = moment($("#fromTime").val()).format()
-		console.log fromTime
+		fromTime = $("#fromTime").val()
 		toTime = $("#toTime").val()
-		filteredData = filter(issueData, "date", fromTime, toTime)
+		filteredData = filterTime(issueData, "time", fromTime, toTime)
 		buildTable(filteredData)
 
 	#reset filter button
 	$('#reports').on 'click', '.reset-btn', () ->
 		if $(@).closest('.container').find('.filter-input').hasClass('open')
-			console.log 'whats up'
 			$(@).closest('.container').find('.filter-input').removeClass('open').addClass('hidden')
 		else
 			console.log 'no reset'

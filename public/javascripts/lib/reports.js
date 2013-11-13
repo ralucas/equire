@@ -21,7 +21,7 @@ Functions
   totalsObj = {};
 
   $(function() {
-    var buildTable, filter, totalsBuild, totalsTable;
+    var buildTable, filter, filterTime, totalsBuild, totalsTable;
     buildTable = function(arr) {
       var each, _i, _len, _results;
       $('#reportsBody').empty();
@@ -114,6 +114,20 @@ Functions
       }
       return output;
     };
+    filterTime = function(arr, key, value1, value2) {
+      var each, output, _i, _len;
+      output = [];
+      for (_i = 0, _len = arr.length; _i < _len; _i++) {
+        each = arr[_i];
+        console.log(value1);
+        console.log(value2);
+        console.log(moment(each[key]).format('HH:mm:ss'));
+        if (moment(each[key]).format('HH:mm:ss') >= value1 && moment(each[key]).format('HH:mm:ss') <= value2) {
+          output.push(each);
+        }
+      }
+      return output;
+    };
     /*
     	Filter/Search by name, date, time range, time waited, lesson, issue, comment
     */
@@ -172,10 +186,10 @@ Functions
       return buildTable(filteredData);
     });
     $('#fromTime').timepicker({
-      'timeFormat': 'h:i A'
+      'timeFormat': 'H:i:s'
     });
     $('#toTime').timepicker({
-      'timeFormat': 'h:i A'
+      'timeFormat': 'H:i:s'
     });
     $('#reports').on('click', '#time-btn', function() {
       return $('.time-row').removeClass('hidden').addClass('open');
@@ -185,15 +199,13 @@ Functions
     });
     $('#reports').on('click', '#submit-time', function() {
       var fromTime, toTime;
-      fromTime = moment($("#fromTime").val()).format();
-      console.log(fromTime);
+      fromTime = $("#fromTime").val();
       toTime = $("#toTime").val();
-      filteredData = filter(issueData, "date", fromTime, toTime);
+      filteredData = filterTime(issueData, "time", fromTime, toTime);
       return buildTable(filteredData);
     });
     $('#reports').on('click', '.reset-btn', function() {
       if ($(this).closest('.container').find('.filter-input').hasClass('open')) {
-        console.log('whats up');
         $(this).closest('.container').find('.filter-input').removeClass('open').addClass('hidden');
       } else {
         console.log('no reset');

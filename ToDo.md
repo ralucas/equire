@@ -4,6 +4,7 @@ To Do for Help Requester
 	* Students by requests
 	* Days of week by requests
 	* Dates by requests
+	* Get Time picker up and running
 2. Get lesson entry to backtrack and go forward for all the lessons on that date
 3. Sortability for current requests
 4. Add in linkM feature
