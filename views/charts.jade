@@ -14,6 +14,7 @@ block content
 					ul.dropdown-menu
 						li <a href="/teacher">Teacher Home</a>
 						li <a href="/reports">Reports</a>
+						li <a href="/summary">Summary Reports</a>
 						li <a href="/charts">Charts</a>
 						li.divider
 						li <a href="/logout">Sign Out</a>
@@ -24,5 +25,5 @@ block content
 	.container.chart.line-chart
 		h1 Requests by Days of the Week
 		canvas#lineChart(width="800", height="400")
-		div#columnChart(width="800", height="400")
+		div#columnChart(width="800", height="800")
 	include footer

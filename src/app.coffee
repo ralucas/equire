@@ -89,7 +89,6 @@ Issue = mongoose.model 'Issue', IssueSchema
 
 #instantiate the User database
 UserSchema = new mongoose.Schema {
-	_id:{type: String, required: true}
 	openId: String,
 	displayName: String,
 	emails: String,
@@ -122,33 +121,30 @@ Lesson = mongoose.model 'Lesson', LessonSchema
 ip = process.env.IP ? 'http://localhost:3000'
 #heroku config:add IP=http://intense-dawn-1429.herokuapp.com
 
-passport.use new GoogleStrategy {
-	returnURL: ip+'/auth/google/return',
-	realm: ip
-	},
-	(identifier, profile, done) ->
-		console.log 'email', profile.emails[0]['value']
-		User.find {_id: profile.emails[0]['value']}, (err, user) ->
-			done err, user[0]
-			console.log 'uu', user[0]
-			if user.length is 0
-				User.create {
-					openId: identifier,
-					_id: profile.emails[0]['value'],
-					displayName: profile.displayName,
-					emails: profile.emails[0]['value'],
-					isTeacher: false
-				}, (err, user) ->
-					done err, user[0]
-					return
-				return
-			return
-
 passport.serializeUser (user, done) ->
 	done null, user
 
 passport.deserializeUser (obj, done) ->
 	done null, obj
+
+passport.use new GoogleStrategy {
+	returnURL: ip+'/auth/google/return',
+	realm: ip
+	},
+	(identifier, profile, done) ->
+		process.nextTick () ->
+			User.find {emails: profile.emails[0]['value']}, (err, user) ->
+				if !user.length
+					User.create {
+						openId: identifier,
+						displayName: profile.displayName,
+						emails: profile.emails[0]['value'],
+						isTeacher: false
+					}, (err, user) ->
+						done err, user
+				else
+					done err, user[0]
+
 
 app.get '/auth/google', passport.authenticate 'google'
 
@@ -269,7 +265,7 @@ Data Manipulation
 
 #splash page
 app.get '/', (req, res) ->
-	res.render 'login', {user: req.user}
+	res.render 'login'
 
 app.get '/account', (req, res) ->
 	if req.user.isTeacher is false

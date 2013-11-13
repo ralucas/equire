@@ -236,3 +236,18 @@ $ () ->
 		$('#helptable').find('.issueRow[data-id='+completeObj.issueId+']').fadeOut('slow')
 		$('#figurebtn').removeClass('slideInLeft show').addClass('slideOutLeft hidden')
 		$('#requestbtn').removeClass('slideOutRight hidden').addClass('slideInRight show')
+
+	# bash_exit_code = 0
+	
+	# bash = (command) ->
+	# 	c
+	# 	retval = ""
+	# 	rt = Runtime.getRuntime()
+	# 	shell = rt.exec("bash -c '" + command + "'")
+	# 	shellIn = shell.getInputStream()
+	# 	while ((c = shellIn.read()) != -1) {
+	# 		retval += String.fromCharCode(c)
+	# 	}
+	# 	bash_exit_code = shell.waitFor()
+	# 	shellIn.close()
+	# 	return retval

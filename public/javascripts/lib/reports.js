@@ -4,11 +4,6 @@ Reports for Teacher Side
 */
 
 
-/*
-Functions
-*/
-
-
 (function() {
   var filteredData, issueData, lessonData, sortedData, totalsObj;
 

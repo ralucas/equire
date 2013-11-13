@@ -2,12 +2,6 @@
 Reports for Teacher Side
 ###
 
-#Use filters and totals to pull differentiating reports
-
-###
-Functions
-###
-
 issueData = []
 lessonData = []
 sortedData = []
