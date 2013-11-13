@@ -60,6 +60,14 @@ timeZone = 'America/Denver'
 #execute command line
 
 
+linkmOff = childProcess.exec('~/linkm/./linkm-tool --off', 
+	(error, stdout, stderr) ->
+		console.log 'stdout: ' + stdout
+		console.log 'stderr: ' + stderr
+		if error isnt null
+			console.log 'exec error: ' + error
+	)
+
 #instantiate the Issue database
 IssueSchema = new mongoose.Schema {
 	issue: String,
@@ -177,19 +185,36 @@ io.sockets.on 'connection', (socket) ->
 				console.log 'errror'
 			else
 				console.log 'iss', issue
+				###
+				childProcess.exec('~/linkm/./linkm-tool --on', 
+					(error, stdout, stderr) ->
+						console.log 'stdout: ' + stdout
+						console.log 'stderr: ' + stderr
+						if error isnt null
+							console.log 'exec error: ' + error
+					)
+				setTimeout () ->
+					childProcess.exec('~/linkm/./linkm-tool --off', 
+						(error, stdout, stderr) ->
+							console.log 'stdout: ' + stdout
+							console.log 'stderr: ' + stderr
+							if error isnt null
+								console.log 'exec error: ' + error
+						)
+				, 5000
+				###
+				#Send an SMS text message via Twilio
+				client.sendMessage {
+					to:'+16145519436',
+					from: '+13036256825',
+					body: issueObj.displayName+' '+issueObj.newIssue+'.'
+					}, (err, responseData) -> 
+					if !err
+						console.log responseData.from
+						console.log responseData.body
 				io.sockets.emit 'issue', issue
-				)
-		#Send an SMS text message via Twilio
-		###
-		client.sendMessage {
-			to:'+16145519436',
-			from: '+13036256825',
-			body: issueObj.displayName+' '+issueObj.newIssue+'.'
-			}, (err, responseData) -> 
-			if !err
-				console.log responseData.from
-				console.log responseData.body
-		###
+			)
+		
 		
 	#socket event on edit
 	socket.on 'issueEditObj', (issueEditObj) ->
@@ -212,18 +237,16 @@ io.sockets.on 'connection', (socket) ->
 					console.log 'ERROR!' 
 				else if completeObj.comment is 'Figured out on own'
 					console.log 'figuredoutonown'
-					###
 					#If figured out on own
 					#Send an SMS text message via Twilio
 					client.sendMessage {
 						to:'+16145519436',
 						from: '+13036256825',
-						body: Issue.displayName+' '+completeObj.comment+'.'
+						body: issue.displayName+' '+completeObj.comment+'.'
 						}, (err, responseData) -> 
 						if !err
 							console.log responseData.from
 							console.log responseData.body
-					###
 				else
 					console.log 'Completed and Updated!'
 					)

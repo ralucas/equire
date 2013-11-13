@@ -19,6 +19,7 @@ $.get '/pieChart', (data) ->
 			name : each
 			data : values
 		}
+		console.log pieData
 		pieData.push(obj)
 	$('#pieChart').highcharts {
 		chart: {

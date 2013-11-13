@@ -28,6 +28,7 @@
         name: each,
         data: values
       };
+      console.log(pieData);
       pieData.push(obj);
     }
     return $('#pieChart').highcharts({
