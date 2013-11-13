@@ -14,8 +14,7 @@ client = require('twilio')('ACe1b7313b5b376f66c4db568dfa97e3e9', '1a3442ad88426e
 sys = require 'sys'
 childProcess = require 'child_process'
 _ = require 'underscore'
-# WebSocket = require 'ws'
-# WebSocketServer = require('ws').Server
+momentTZ = require 'moment-timezone'
 
 app = express()
 
@@ -55,6 +54,9 @@ mongoose.connect MongoURL
 #moment
 moment().format()
 
+#timezone - needs to communicate with client
+timeZone = 'America/Denver'
+
 #execute command line
 
 
@@ -81,8 +83,6 @@ IssueSchema.pre 'save', (next) ->
 	for index, i of @
 		if typeof i is 'string'
 			@[index] = htmlEntities(i)
-			console.log @[index]
-	console.log 'this', @
 	next()
 
 Issue = mongoose.model 'Issue', IssueSchema
@@ -107,6 +107,14 @@ LessonSchema = new mongoose.Schema {
 	timeStamp: Object,
 	time: Object
 }
+
+LessonSchema.pre 'save', (next) ->
+	htmlEntities = (str) ->
+		return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+	for index, i of @
+		if typeof i is 'string'
+			@[index] = htmlEntities(i)
+	next()
 
 Lesson = mongoose.model 'Lesson', LessonSchema
 
@@ -155,9 +163,9 @@ io.sockets.on 'connection', (socket) ->
 
 	#socket event on issue instantiation
 	socket.on 'issueObj', (issueObj) ->
-		date = moment().format('L')
-		timeStamp = moment().format('X')
-		current_time = moment().format('lll')
+		date = moment().tz(timeZone).format('L')
+		timeStamp = moment().tz(timeZone).format('X')
+		current_time = moment().tz(timeZone).format('lll')
 		issue = new Issue({
 			issue: issueObj.newIssue,
 			username: issueObj.username,
@@ -227,9 +235,9 @@ io.sockets.on 'connection', (socket) ->
 
 	#socket event on lesson input
 	socket.on 'lessonObj', (lessonObj) ->
-		date = moment().format('L')
-		timeStamp = moment().format('X')
-		current_time = moment().format('lll')
+		date = moment().tz(timeZone).format('L')
+		timeStamp = moment().tz(timeZone).format('X')
+		current_time = moment().tz(timeZone).format('lll')
 		lesson = new Lesson({
 			lesson: lessonObj.lesson,
 			username: lessonObj.username,
@@ -327,6 +335,11 @@ app.get '/reportsInfo', (req, res) ->
 		if err then console.log 'ERROR' else
 			res.send issues
 
+app.get '/lessonInfo', (req, res) ->
+	Lesson.find {}, (err, lessons) ->
+		if err then console.log 'ERROR' else
+			res.send lessons
+
 #chart routing
 app.get '/pieChart', (req, res) ->
 	key = 'displayName'
@@ -355,19 +368,6 @@ app.get '/charts', (req, res) ->
 	if req.user.isTeacher is false then res.redirect '/student'
 	else
 		res.render 'charts', {user: req.user}
-
-#websockets for heroku
-# wss = new WebSocketServer {server: server}
-# console.log 'websocket server created'
-# wss.on 'connection', (ws) ->
-# 	id = setInterval( () -> 
-#     	ws.send(JSON.stringify(new Date()), () -> )
-#   		, 1000)
-# 	console.log 'websocket connection open'
-# 	ws.on 'close', () ->
-# 		console.log 'websocket connection close'
-# 		clearInterval(id)
-
 
 #get and listen to server
 server.listen(app.get('port'), () ->

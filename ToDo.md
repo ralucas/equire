@@ -15,3 +15,4 @@ To Do for Help Requester
 	* Get images optimized
 	* minify css and js
 9. Administrator dashboard to manage student and teacher users
+10. Needs timezone selection/management

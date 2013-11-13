@@ -9,6 +9,7 @@ Functions
 ###
 
 issueData = []
+lessonData = []
 sortedData = []
 filteredData = []
 totalsObj = {}
@@ -94,6 +95,9 @@ $ () ->
 		issueData = data
 		buildTable(issueData)
 		totalsBuild(issueData)
+
+	$.get 'lessonInfo', (data) ->
+		lessonData = data
 			
 	#sorts on header click
 	$('th').each () ->

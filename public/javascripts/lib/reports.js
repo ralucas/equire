@@ -10,9 +10,11 @@ Functions
 
 
 (function() {
-  var filteredData, issueData, sortedData, totalsObj;
+  var filteredData, issueData, lessonData, sortedData, totalsObj;
 
   issueData = [];
+
+  lessonData = [];
 
   sortedData = [];
 
@@ -83,6 +85,9 @@ Functions
       issueData = data;
       buildTable(issueData);
       return totalsBuild(issueData);
+    });
+    $.get('lessonInfo', function(data) {
+      return lessonData = data;
     });
     $('th').each(function() {
       return $(this).on('click', function() {
