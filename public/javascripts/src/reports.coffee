@@ -18,7 +18,6 @@ $ () ->
 					'<td class="displayName">'+each['displayName']+'</td>'+
 					'<td class="issueTime" data-time='+each['timeStamp']+'>'+each['time']+'</td>'+
 					'<td class="waitTime">'+moment().minutes(each['totalWait'])+'</td>'+
-					'<td>'+each['lesson']+'</td>'+
 					'<td>'+each['issue']+'</td>'+
 					'<td>'+each['comment']+'</td>'+
 					'</tr>')

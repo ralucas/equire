@@ -25,7 +25,7 @@ Reports for Teacher Side
       _results = [];
       for (_i = 0, _len = arr.length; _i < _len; _i++) {
         each = arr[_i];
-        _results.push($('#reportsBody').append('<tr class="issueRow" data-id=' + each['_id'] + '>' + '<td class="displayName">' + each['displayName'] + '</td>' + '<td class="issueTime" data-time=' + each['timeStamp'] + '>' + each['time'] + '</td>' + '<td class="waitTime">' + moment().minutes(each['totalWait']) + '</td>' + '<td>' + each['lesson'] + '</td>' + '<td>' + each['issue'] + '</td>' + '<td>' + each['comment'] + '</td>' + '</tr>'));
+        _results.push($('#reportsBody').append('<tr class="issueRow" data-id=' + each['_id'] + '>' + '<td class="displayName">' + each['displayName'] + '</td>' + '<td class="issueTime" data-time=' + each['timeStamp'] + '>' + each['time'] + '</td>' + '<td class="waitTime">' + moment().minutes(each['totalWait']) + '</td>' + '<td>' + each['issue'] + '</td>' + '<td>' + each['comment'] + '</td>' + '</tr>'));
       }
       return _results;
     };
