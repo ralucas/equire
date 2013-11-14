@@ -382,6 +382,9 @@ app.get '/charts', (req, res) ->
 	else
 		res.render 'charts', {user: req.user}
 
+app.get '/builtwith', (req, res) ->
+	res.render 'builtwith', {user: req.user}
+
 #get and listen to server
 server.listen(app.get('port'), () ->
   console.log 'Express server listening on port ' + app.get('port'))

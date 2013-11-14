@@ -2,6 +2,13 @@ Help Requester
 ================
 ###A raise your hand app for both teachers and students to better effectively handle requests and respond quicker
 
+Who is it for:
+--------------
+* Great for large classrooms so that teachers and assistants can handle real-time incoming requests
+* Great for gathering, visualizing, and understanding studnet request data
+* Easy to use for students at all levels
+* Makes student request management a cinch
+
 What is seeks to offer:
 -----------------------
 * Simple and easy to use for students and teachers
@@ -29,3 +36,4 @@ Tools used:
 * Libraries:
 	* Underscorejs
 	* Momentjs
+	* Animatecss

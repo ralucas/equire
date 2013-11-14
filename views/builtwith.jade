@@ -18,26 +18,27 @@ block content
 						li <a href="/charts">Charts</a>
 						li.divider
 						li <a href="/logout">Sign Out</a>
-	.container#reports
-		h1 Summary Info
-		table.table.table-striped#summaryTable
-			thead 
-				tr#summaryHeaders
-					th Total Requests to Date
-					th Avg Wait Time
-					th.date-thead
-					th.day-thead
-					th Most Common Term from issues
-					th Most Common Term from comment
-					th Biggest Requester
-			tbody#summaryBody	
-	.container#summaryReports
-		p.lead Select Report to View
-			button.btn.btn-default.btn-lg#summResetBtn(type='button') Reset
-		.btn-group
-			button.btn.btn-default.btn-lg#userSumBtn(type="button") User Request Summary
-			button.btn.btn-default.btn-lg#dateSumBtn(type="button") Date Request Summary
-		table.table.table-hover#summaryReportsTable
-			thead
-			tbody
-	include footer
+	.container#builtWith
+		h1 This App was built in Colorado with <span id='heart'>♡</span> by <a href="http://www.richardalucas.com">Richard Lucas</a>
+		h2 Using the following awesome technologies and libraries:
+		ul#builtWithList
+			li Node.js
+			li MongoDB
+			li CoffeeScript
+			li Stylus
+			li Express
+			li Underscore.js
+			li Moment.js
+			li Socket.io
+			li jQuery and jQueryUI
+			li AJAX Requests
+			li Twitter Bootstrap
+			li Animate.css
+			li High Charts
+			li Charts.js
+			li Passport.js
+
+	.container
+		p.lead My Github: <a href="https://github.com/ralucas">ralucas</a>
+		p.lead Contact Me: <a href="mailto:richard@richardalucas.com">richard@richardalucas.com</a>
+		p.lead My Site: <a href="http://www.richardalucas.com">http://www.richardalucas.com</a>
