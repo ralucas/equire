@@ -45,7 +45,6 @@ $.get '/pieChart', (data) ->
 
 #Line Chart for Requests by days of the week
 $.get '/lineChart', (data) ->
-	console.log data
 	columnData = []
 	days = []
 	values = []
@@ -57,7 +56,6 @@ $.get '/lineChart', (data) ->
 			data : [value]
 		}
 		columnData.push(obj)
-	console.log columnData
 	$('#columnChart').highcharts {
 		chart: {
 			type: 'column'

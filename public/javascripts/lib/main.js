@@ -108,7 +108,7 @@
       _results = [];
       for (_i = 0, _len = data.length; _i < _len; _i++) {
         eachIssue = data[_i];
-        _results.push($('#currReqTable tbody').append('<tr class="issueRow" data-id=' + eachIssue['_id'] + '>' + '<td class="edit" data-toggle="modal" data-target="#editRequestModal">Edit</td>' + '<td class="issueTime" data-time=' + eachIssue['timeStamp'] + '>' + eachIssue['time'] + '</td>' + '<td class="waitTime"></td>' + '<td class="issueDesc">' + eachIssue['issue'] + '</td>' + '</tr>'));
+        _results.push($('#currReqTable tbody').append('<tr class="issueRow" data-id=' + eachIssue['_id'] + '>' + '<td class="edit" data-toggle="modal" data-target="#editRequestModal">Edit</td>' + '<td class="issueTime" data-time=' + eachIssue['timeStamp'] + '>' + eachIssue['time'] + '</td>' + '<td class="waitTime">' + each['totalWait'] + '</td>' + '<td class="issueDesc">' + eachIssue['issue'] + '</td>' + '</tr>'));
       }
       return _results;
     });
@@ -132,11 +132,13 @@
       return $('#currReqTable').find('.issueRow[data-id=' + issueEditObj.issueId + ']').find('.issueDesc').text(issueEditObj.issue);
     });
     $.get('/pastReq', function(data) {
-      var eachIssue, _i, _len, _results;
+      var eachIssue, ttw, tw, _i, _len, _results;
       _results = [];
       for (_i = 0, _len = data.length; _i < _len; _i++) {
         eachIssue = data[_i];
-        _results.push($('#pastReqTable tbody').append('<tr class="issueRow" data-id=' + eachIssue['_id'] + '>' + '<td class="issueTime" data-time=' + eachIssue['timeStamp'] + '>' + eachIssue['time'] + '</td>' + '</td><td class="waitTime">' + moment().minutes(eachIssue['totalWait']) + '</td>' + '<td>' + eachIssue['issue'] + '</td>' + '<td>' + eachIssue['comment'] + '</td>' + '</tr>'));
+        tw = each['totalWait'];
+        ttw = secToMin(tw);
+        _results.push($('#pastReqTable tbody').append('<tr class="issueRow" data-id=' + eachIssue['_id'] + '>' + '<td class="issueTime" data-time=' + eachIssue['timeStamp'] + '>' + eachIssue['time'] + '</td>' + '</td><td class="waitTime">' + ttw + '</td>' + '<td>' + eachIssue['issue'] + '</td>' + '<td>' + eachIssue['comment'] + '</td>' + '</tr>'));
       }
       return _results;
     });

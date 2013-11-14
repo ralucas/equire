@@ -20,11 +20,13 @@ Reports for Teacher Side
   $(function() {
     var buildSummaryTable, buildTable, filter, filterTime, secToMin, totalsBuild, totalsTable;
     secToMin = function(seconds) {
-      var minutes, secs, totalMinutes;
-      minutes = Math.floor(seconds / 60);
-      secs = seconds % 60;
-      totalMinutes = minutes + ':' + secs;
-      return totalMinutes;
+      var minutes;
+      minutes = Math.ceil(seconds / 60);
+      if (minutes === 1) {
+        return 'Less than a minute';
+      } else {
+        return minutes + ' minutes';
+      }
     };
     buildTable = function(arr) {
       var each, ttw, tw, _i, _len, _results;
@@ -34,8 +36,7 @@ Reports for Teacher Side
         each = arr[_i];
         tw = each['totalWait'];
         ttw = secToMin(tw);
-        console.log('ttw', ttw);
-        _results.push($('#reportsBody').append('<tr class="issueRow" data-id=' + each['_id'] + '>' + '<td class="displayName">' + each['displayName'] + '</td>' + '<td class="issueTime" data-time=' + each['timeStamp'] + '>' + each['time'] + '</td>' + '<td class="waitTime">' + ttw + ' minutes</td>' + '<td>' + each['issue'] + '</td>' + '<td>' + each['comment'] + '</td>' + '</tr>'));
+        _results.push($('#reportsBody').append('<tr class="issueRow" data-id=' + each['_id'] + '>' + '<td class="displayName">' + each['displayName'] + '</td>' + '<td class="issueTime" data-time=' + each['timeStamp'] + '>' + each['time'] + '</td>' + '<td class="reportwaitTime">' + ttw + '</td>' + '<td>' + each['issue'] + '</td>' + '<td>' + each['comment'] + '</td>' + '</tr>'));
       }
       return _results;
     };

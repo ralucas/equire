@@ -20,10 +20,11 @@ block content
 						li <a href="/logout">Sign Out</a>
 	.container.chart.pie-chart
 		h1 Requests by User
-		div#pieChart
+		div#pieChart(width="800", height="400")
 	hr
 	.container.chart.line-chart
 		h1 Requests by Days of the Week
 		canvas#lineChart(width="800", height="400")
-		div#columnChart(width="800", height="800")
+		hr
+		div#columnChart(width="800", height="1200")
 	include footer

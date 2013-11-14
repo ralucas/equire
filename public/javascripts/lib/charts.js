@@ -57,7 +57,6 @@
 
   $.get('/lineChart', function(data) {
     var columnData, ctx, days, each, lineData, line_options, newLineChart, obj, value, values;
-    console.log(data);
     columnData = [];
     days = [];
     values = [];
@@ -71,7 +70,6 @@
       };
       columnData.push(obj);
     }
-    console.log(columnData);
     $('#columnChart').highcharts({
       chart: {
         type: 'column'

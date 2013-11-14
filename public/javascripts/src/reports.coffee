@@ -12,10 +12,10 @@ $ () ->
 
 	#converts seconds to minutes
 	secToMin = (seconds) ->
-		minutes = Math.floor(seconds/60)
-		secs = seconds%60
-		totalMinutes = minutes+':'+secs
-		return totalMinutes
+		minutes = Math.ceil(seconds/60)
+		if minutes is 1 then return 'Less than a minute'
+		else
+			return minutes+' minutes'
 
 	#builds table function
 	buildTable = (arr) ->
@@ -23,11 +23,10 @@ $ () ->
 		for each in arr
 			tw = each['totalWait']
 			ttw = secToMin(tw)
-			console.log 'ttw', ttw
 			$('#reportsBody').append('<tr class="issueRow" data-id='+each['_id']+'>'+
 					'<td class="displayName">'+each['displayName']+'</td>'+
 					'<td class="issueTime" data-time='+each['timeStamp']+'>'+each['time']+'</td>'+
-					'<td class="waitTime">'+(ttw)+' minutes</td>'+
+					'<td class="reportwaitTime">'+ttw+'</td>'+
 					'<td>'+each['issue']+'</td>'+
 					'<td>'+each['comment']+'</td>'+
 					'</tr>')

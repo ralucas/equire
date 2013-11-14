@@ -109,7 +109,7 @@ $ () ->
 			$('#currReqTable tbody').append('<tr class="issueRow" data-id='+eachIssue['_id']+'>'+
 				'<td class="edit" data-toggle="modal" data-target="#editRequestModal">Edit</td>'+
 				'<td class="issueTime" data-time='+eachIssue['timeStamp']+'>'+eachIssue['time']+'</td>'+
-				'<td class="waitTime"></td>'+
+				'<td class="waitTime">'+each['totalWait']+'</td>'+
 				'<td class="issueDesc">'+eachIssue['issue']+'</td>'+
 				'</tr>')
 
@@ -138,9 +138,11 @@ $ () ->
 	#Past request table
 	$.get '/pastReq', (data) ->
 		for eachIssue in data
+			tw = each['totalWait']
+			ttw = secToMin(tw)
 			$('#pastReqTable tbody').append('<tr class="issueRow" data-id='+eachIssue['_id']+'>'+
 				'<td class="issueTime" data-time='+eachIssue['timeStamp']+'>'+eachIssue['time']+'</td>'+
-				'</td><td class="waitTime">'+moment().minutes(eachIssue['totalWait'])+'</td>'+
+				'</td><td class="waitTime">'+ttw+'</td>'+
 				'<td>'+eachIssue['issue']+'</td>'+
 				'<td>'+eachIssue['comment']+'</td>'+
 				'</tr>')
