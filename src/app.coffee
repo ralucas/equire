@@ -57,17 +57,6 @@ moment().format()
 #timezone - needs to communicate with client
 timeZone = 'America/Denver'
 
-#execute command line
-
-
-linkmOff = childProcess.exec('~/linkm/./linkm-tool --off', 
-	(error, stdout, stderr) ->
-		console.log 'stdout: ' + stdout
-		console.log 'stderr: ' + stderr
-		if error isnt null
-			console.log 'exec error: ' + error
-	)
-
 #instantiate the Issue database
 IssueSchema = new mongoose.Schema {
 	issue: String,
@@ -76,7 +65,7 @@ IssueSchema = new mongoose.Schema {
 	date: Object,
 	timeStamp: Object,
 	time: Object,
-	totalWait: Object,
+	totalWait: Number,
 	isComplete: Boolean,
 	comment: String
 }
@@ -99,7 +88,7 @@ UserSchema = new mongoose.Schema {
 	openId: String,
 	displayName: String,
 	emails: String,
-	isTeacher: Boolean,
+	isTeacher: Boolean
 }
 
 User = mongoose.model 'User', UserSchema

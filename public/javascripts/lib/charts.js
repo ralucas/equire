@@ -18,27 +18,40 @@
   };
 
   $.get('/pieChart', function(data) {
-    var each, obj, pieData, value, values;
+    var pieData, seriesData, values;
     pieData = [];
     values = [];
-    for (each in data) {
-      value = data[each];
-      values.push(value);
-      obj = {
-        name: each,
-        data: values
-      };
-      console.log(pieData);
-      pieData.push(obj);
-    }
+    seriesData = _.pairs(data);
     return $('#pieChart').highcharts({
       chart: {
-        type: 'pie'
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false
       },
       title: {
         text: 'Requests by User'
       },
-      series: pieData
+      plotOptions: {
+        pie: {
+          allowPointSelect: true,
+          cursor: 'pointer',
+          dataLabels: {
+            enabled: true,
+            color: '#000000',
+            connectorColor: '#000000',
+            formatter: function() {
+              return '<b>' + this.point.name + '</b>: ' + this.y;
+            }
+          }
+        }
+      },
+      series: [
+        {
+          type: 'pie',
+          name: 'Requests',
+          data: seriesData
+        }
+      ]
     });
   });
 
