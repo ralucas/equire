@@ -193,6 +193,7 @@ io.sockets.on 'connection', (socket) ->
 				, 5000
 				###
 				#Send an SMS text message via Twilio
+				###
 				client.sendMessage {
 					to:'+16145519436',
 					from: '+13036256825',
@@ -201,6 +202,7 @@ io.sockets.on 'connection', (socket) ->
 					if !err
 						console.log responseData.from
 						console.log responseData.body
+				###
 				io.sockets.emit 'issue', issue
 			)
 		
@@ -228,6 +230,7 @@ io.sockets.on 'connection', (socket) ->
 					console.log 'figuredoutonown'
 					#If figured out on own
 					#Send an SMS text message via Twilio
+					###
 					client.sendMessage {
 						to:'+16145519436',
 						from: '+13036256825',
@@ -236,6 +239,7 @@ io.sockets.on 'connection', (socket) ->
 						if !err
 							console.log responseData.from
 							console.log responseData.body
+					###
 				else
 					console.log 'Completed and Updated!'
 					)
