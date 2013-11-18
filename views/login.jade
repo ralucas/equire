@@ -1,40 +1,49 @@
-extends layout
-
-block header
-	header.navbar.navbar-default.navbar-fixed-top(role="navigation")
-		.container
-			.navbar-header
-				a.navbar-brand.pull-left(href="/") Help Requester
-			.collapse.navbar-collapse#bs-example-navbar-collapse-1
-				ul.nav.navbar-nav.navbar-right
-					li
-					a.btn.btn-default.navbar-btn(href="/auth/google") Sign In with Google
-block content
-	section#first
-		section.jumbotron#hero
+doctype 5
+html
+	head
+		title= title
+		link(rel='stylesheet', href='/stylesheets/lib/animate.css')
+		link(rel='stylesheet', href='/stylesheets/lib/jquery.timepicker.css')
+		link(rel='stylesheet' href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css")
+		link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css')
+		link(rel='stylesheet', href='/stylesheets/lib/style.css')
+	body#login-body
+		header.navbar.navbar-default.navbar-fixed-top(role="navigation")
 			.container
-				h1.col-md-8#login-title Welcome to Help Requester
-				aside.signins.col-md-4
-					p.signin-btn#goog-btn <a class="btn btn-lg btn-success" href="/auth/google"> Sign In with Google</a>
-					//- p.signin-btn#face-btn <a class="btn btn-lg btn-primary" href="#"> Sign In with Facebook</a>
-					//- p.signin-btn#git-btn <a class="btn btn-lg btn-default" href="#"> Sign In with Github</a>
-	section.text-section#second
-		.container
-			.row.col-md-5#wihr
-				img(src='/images/questionmark.svg', height="50", width="50")
-				h2 What is Help Requester?
-				p.lead An easy-to-use application for students to request help in real-time from teachers. A simple way for busy teachers to keep track of and respond to requests.
-			.row.col-md-2
-			.row.col-md-5
-				img(src='/images/monitor.svg', height="50", width="50")
-				h2 How Does it Work?
-				p.lead Simply login and either hit the big green button to request teacher help or fill-in the form to give more information. The teacher sees that real-time request and can respond.
-	section.text-section#third
-		.container
-			.row
-				img(src='/images/doc.svg', height="50", width="50")
-				h2 Great Reporting and Charting
-				p.lead Includes reporting and charting features for educators and administrators,<br> enabling the user to visualize patterns and see what's going on in the classroom.
-				br
-				p.lead <span>It's free to try!<span> Go ahead and login using your <a href="/auth/google">Google login</a>.
-	include footer
+				.navbar-header
+					a.navbar-brand.pull-left(href="/") Help Requester
+				.collapse.navbar-collapse#bs-example-navbar-collapse-1
+					ul.nav.navbar-nav.navbar-right
+						li
+						a.btn.btn-default.navbar-btn(href="/auth/google") Sign in with Google
+		section#first
+			section.jumbotron#hero
+				.container
+					h1.col-md-8#login-title Welcome to Help Requester
+					aside.signins.col-md-4
+						p.signin-btn#goog-btn <a class="btn btn-lg btn-success" href="/auth/google"> Sign In with Google</a>
+						//- p.signin-btn#face-btn <a class="btn btn-lg btn-primary" href="#"> Sign In with Facebook</a>
+						//- p.signin-btn#git-btn <a class="btn btn-lg btn-default" href="#"> Sign In with Github</a>
+		section.text-section#second
+			.container
+				.row.col-md-5#wihr
+					img(src='/images/questionmark.svg', height="50", width="50")
+					h2 What is Help Requester?
+					p.lead An easy-to-use application for students to request help in real-time from teachers. A simple way for busy teachers to keep track of and respond to requests.
+				.row.col-md-2
+				.row.col-md-5
+					img(src='/images/monitor.svg', height="50", width="50")
+					h2 How Does it Work?
+					p.lead Simply login and either hit the big green button to request teacher help or fill-in the form to give more information. The teacher sees that real-time request and can respond.
+		section.text-section#third
+			.container
+				.row
+					img(src='/images/doc.svg', height="50", width="50")
+					h2 Great Reporting and Charting
+					p.lead Includes reporting and charting features for educators and administrators,<br> enabling the user to visualize patterns and see what's going on in the classroom.
+					br
+					p.lead <span>It's free to try!<span> Go ahead and login using your <a href="/auth/google">Google login</a>
+		footer.navbar.navbar-default.navbar-static-bottom.footer-login
+			.container
+				p.navbar-text.navbar-right.pull-right Made in Colorado with <span id='heart'>♡</span> by <a href="http://www.richardalucas.com">Richard Lucas</a>
+				p.navbar-text.navbar-left.pull-left Copyright ©2013

@@ -70,12 +70,10 @@ IssueSchema = new mongoose.Schema {
 	comment: String
 }
 
+#replaces all tag text entries to prevent script tag injection 
 IssueSchema.pre 'save', (next) ->
 	htmlEntities = (str) ->
 		return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
-	# loop over "this"
-	# find all strings
-	# encode strings
 	for index, i of @
 		if typeof i is 'string'
 			@[index] = htmlEntities(i)
@@ -136,7 +134,7 @@ passport.use new GoogleStrategy {
 						openId: identifier,
 						displayName: profile.displayName,
 						emails: profile.emails[0]['value'],
-						isTeacher: false
+						isTeacher: true
 					}, (err, user) ->
 						done err, user
 				else
@@ -193,7 +191,6 @@ io.sockets.on 'connection', (socket) ->
 				, 5000
 				###
 				#Send an SMS text message via Twilio
-				###
 				client.sendMessage {
 					to:'+16145519436',
 					from: '+13036256825',
@@ -202,7 +199,6 @@ io.sockets.on 'connection', (socket) ->
 					if !err
 						console.log responseData.from
 						console.log responseData.body
-				###
 				io.sockets.emit 'issue', issue
 			)
 		
@@ -230,7 +226,6 @@ io.sockets.on 'connection', (socket) ->
 					console.log 'figuredoutonown'
 					#If figured out on own
 					#Send an SMS text message via Twilio
-					###
 					client.sendMessage {
 						to:'+16145519436',
 						from: '+13036256825',
@@ -239,7 +234,6 @@ io.sockets.on 'connection', (socket) ->
 						if !err
 							console.log responseData.from
 							console.log responseData.body
-					###
 				else
 					console.log 'Completed and Updated!'
 					)
@@ -269,25 +263,19 @@ io.sockets.on 'connection', (socket) ->
 			)
 
 ###
-Data Manipulation
+Routing
 ###
-# Issue.where({}).count( (err, count) ->
-# 	if err
-# 		console.log 'err'
-# 	else
-# 		issueCount = count
-# 		console.log 'is', issueCount
-# 	)
 
 #splash page
 app.get '/', (req, res) ->
 	res.render 'login'
 
 app.get '/account', (req, res) ->
-	if req.user.isTeacher is false
-		res.redirect '/student'
-	else
-		res.redirect '/teacher'
+	res.redirect '/student'
+	# if req.user.isTeacher is false
+	# 	res.redirect '/student'
+	# else
+	# 	res.redirect '/teacher'
 
 ###
 Student Routing
@@ -327,9 +315,10 @@ Teacher Routing
 ###
 
 app.get '/teacher', (req, res) ->
-	if req.user.isTeacher is false then res.redirect '/student'
-	else
-		res.render 'teacher', {user: req.user}
+	res.render 'teacher', {user: req.user}
+	# if req.user.isTeacher is false then res.redirect '/student'
+	# else
+	# 	res.render 'teacher', {user: req.user}
 
 #look for incomplete issues and send them to the client
 app.get '/found', (req, res) ->
@@ -338,14 +327,16 @@ app.get '/found', (req, res) ->
 			res.send issues
 
 app.get '/reports', (req, res) ->
-	if req.user.isTeacher is false then res.redirect '/student'
-	else
-		res.render 'reports', {user: req.user}
+	res.render 'reports', {user: req.user}
+	# if req.user.isTeacher is false then res.redirect '/student'
+	# else
+	# 	res.render 'reports', {user: req.user}
 
 app.get '/summary', (req, res) ->
-	if req.user.isTeacher is false then res.redirect '/student'
-	else
-		res.render 'summary', {user: req.user}
+	res.render 'summary', {user: req.user}
+	# if req.user.isTeacher is false then res.redirect '/student'
+	# else
+	# 	res.render 'summary', {user: req.user}
 
 app.get '/reportsInfo', (req, res) ->
 	Issue.find {}, (err, issues) ->
@@ -382,9 +373,10 @@ app.get '/lineChart', (req, res) ->
 		)
 
 app.get '/charts', (req, res) ->
-	if req.user.isTeacher is false then res.redirect '/student'
-	else
-		res.render 'charts', {user: req.user}
+	res.render 'charts', {user: req.user}
+	# if req.user.isTeacher is false then res.redirect '/student'
+	# else
+	# 	res.render 'charts', {user: req.user}
 
 app.get '/builtwith', (req, res) ->
 	res.render 'builtwith', {user: req.user}
