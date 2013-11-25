@@ -108,7 +108,7 @@
       _results = [];
       for (_i = 0, _len = data.length; _i < _len; _i++) {
         eachIssue = data[_i];
-        _results.push($('#currReqTable tbody').append('<tr class="issueRow" data-id=' + eachIssue['_id'] + '>' + '<td class="edit" data-toggle="modal" data-target="#editRequestModal">Edit</td>' + '<td class="issueTime" data-time=' + eachIssue['timeStamp'] + '>' + eachIssue['time'] + '</td>' + '<td class="waitTime">' + each['totalWait'] + '</td>' + '<td class="issueDesc">' + eachIssue['issue'] + '</td>' + '</tr>'));
+        _results.push($('#currReqTable tbody').append('<tr class="issueRow" data-id=' + eachIssue['_id'] + '>' + '<td class="edit" data-toggle="modal" data-target="#editRequestModal">Edit</td>' + '<td class="issueTime" data-time=' + eachIssue['timeStamp'] + '>' + eachIssue['time'] + '</td>' + '<td class="waitTime">' + eachIssue['totalWait'] + '</td>' + '<td class="issueDesc">' + eachIssue['issue'] + '</td>' + '</tr>'));
       }
       return _results;
     });
