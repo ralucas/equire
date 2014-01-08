@@ -1,4 +1,5 @@
 # Module dependencies.
+require('strong-agent').profile()
 express = require 'express'
 routes = require './../routes'
 http = require 'http'
@@ -21,7 +22,7 @@ momentTZ = require 'moment-timezone'
 app = express()
 
 #all environments
-app.set 'port', process.env.PORT || 3000
+app.set 'port', process.env.PORT || 3001
 app.set 'views', __dirname + './../views'
 app.set 'view engine', 'jade'
 app.use express.favicon()
@@ -41,6 +42,9 @@ if 'development' == app.get('env')
 
 #create server
 server = http.createServer(app)
+
+#localhost variable
+local = 'http://localhost:' + app.get('port')
 
 #start web socket server
 io = socketio.listen server
@@ -115,7 +119,7 @@ LessonSchema.pre 'save', (next) ->
 Lesson = mongoose.model 'Lesson', LessonSchema
 
 #passport Google setup
-ip = process.env.IP ? 'http://localhost:3000'
+ip = process.env.IP ? local
 #heroku config:add IP=http://intense-dawn-1429.herokuapp.com
 
 passport.serializeUser (user, done) ->

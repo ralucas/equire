@@ -18,6 +18,7 @@
     "underscore": "~1.5.2",
     "ws": "~0.4.31",
     "moment-timezone": "0.0.3",
-    "passport-google-oauth": "~0.1.5"
+    "passport-google-oauth": "~0.1.5",
+    "strong-agent": "~0.2.19"
   }
 }
