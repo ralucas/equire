@@ -14,3 +14,23 @@ To Do for Help Requester
 	* Needs timezone selection/management
 1. Port to phone with phonegap
 1. Port to the iPad
+
+Code for hooking up to linkm
+
+                childProcess.exec('~/linkm/./linkm-tool --on', 
+                    (error, stdout, stderr) ->
+                        console.log 'stdout: ' + stdout
+                        console.log 'stderr: ' + stderr
+                        if error isnt null
+                            console.log 'exec error: ' + error
+                    )
+                setTimeout () ->
+                    childProcess.exec('~/linkm/./linkm-tool --off', 
+                        (error, stdout, stderr) ->
+                            console.log 'stdout: ' + stdout
+                            console.log 'stderr: ' + stderr
+                            if error isnt null
+                                console.log 'exec error: ' + error
+                        )
+                , 5000
+
