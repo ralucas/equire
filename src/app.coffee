@@ -17,8 +17,13 @@ childProcess = require 'child_process'
 _ = require 'underscore'
 momentTZ = require 'moment-timezone'
 
-
 app = express()
+
+local = 'http://localhost:' + app.get('port')
+
+#passport Google setup
+ip = process.env.IP ? local
+#heroku config:add IP=http://intense-dawn-1429.herokuapp.com
 
 #instantiate the User database
 UserSchema = new mongoose.Schema {
@@ -39,7 +44,7 @@ passport.deserializeUser (obj, done) ->
 passport.use new GoogleStrategy {
 	clientID: "1011347908775-9mh5kvjs34j8mcssgu0c7k4qqhqpptv5.apps.googleusercontent.com",
 	clientSecret: "W7nqydtlJfuOp9m41Ul9hGmy",
-	callbackURL: ip+"/auth/google/callback"
+	callbackURL: "/auth/google/callback"
 	},
 	(accesstoken, refreshToken, profile, done) ->
 		process.nextTick () ->
@@ -77,7 +82,6 @@ if 'development' == app.get('env')
 server = http.createServer(app)
 
 #localhost variable
-local = 'http://localhost:' + app.get('port')
 
 #start web socket server
 io = socketio.listen server
@@ -142,9 +146,6 @@ LessonSchema.pre 'save', (next) ->
 
 Lesson = mongoose.model 'Lesson', LessonSchema
 
-#passport Google setup
-ip = process.env.IP ? local
-#heroku config:add IP=http://intense-dawn-1429.herokuapp.com
 
 app.get '/auth/google', 
   passport.authenticate('google', { scope: 'https://www.googleapis.com/auth/plus.login' }),
