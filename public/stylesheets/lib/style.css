@@ -157,7 +157,7 @@ p {
   width: 100%;
   max-height: 1000px;
   height: 600px;
-  color: #fffffa;
+  color: #fffafa;
   margin-bottom: 0;
 }
 #hero .signins p {
@@ -191,22 +191,22 @@ img {
 #second {
   border-color: #e8e8e8;
   background: #a18551 center top no-repeat;
-  color: #fffffa;
+  color: #fffafa;
 }
 #third {
   border-color: #e8e8e8;
   background: #36486b center top no-repeat;
-  color: #fffffa;
+  color: #fffafa;
 }
 #fourth {
   border-color: #e8e8e8;
   background: #808080 center top no-repeat;
-  color: #fffffa;
+  color: #fffafa;
 }
 #fifth {
   border-color: #e8e8e8;
   background: #f00 center top no-repeat;
-  color: #fffffa;
+  color: #fffafa;
 }
 #builtWith {
   width: 50%;
