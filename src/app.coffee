@@ -27,10 +27,12 @@ ip = process.env.IP ? local
 
 #instantiate the User database
 UserSchema = new mongoose.Schema {
-	openId: String,
+	id: String,
 	displayName: String,
-	emails: String,
-	isTeacher: Boolean
+	photos: String,
+	isTeacher: Boolean,
+	gender: String,
+	jsonProfile: Object
 }
 
 User = mongoose.model 'User', UserSchema
@@ -48,13 +50,15 @@ passport.use new GoogleStrategy {
 	},
 	(accesstoken, refreshToken, profile, done) ->
 		process.nextTick () ->
-			User.find {emails: profile.emails[0]['value']}, (err, user) ->
+			User.find {googleId: profile.id}, (err, user) ->
 				if !user.length
 					User.create {
-						openId: identifier,
+						googleId: profile.id,
 						displayName: profile.displayName,
-						emails: profile.emails[0]['value'],
-						isTeacher: true
+						photos: profile.photos[0]['value'],
+						isTeacher: true,
+						gender: profile.gender,
+						jsonProfile: profile._json 
 					}, (err, user) ->
 						done err, user
 				else
@@ -148,13 +152,13 @@ Lesson = mongoose.model 'Lesson', LessonSchema
 
 
 app.get '/auth/google', 
-  passport.authenticate('google', { scope: 'https://www.googleapis.com/auth/plus.login' }),
-  (req, res) ->
+	passport.authenticate('google', { scope: 'https://www.googleapis.com/auth/plus.login' }),
+	(req, res) ->
 
 app.get '/auth/google/callback', 
-  passport.authenticate('google', { failureRedirect: '/' }),
-  (req, res) ->
-    res.redirect('/account');
+	passport.authenticate('google', { failureRedirect: '/' }),
+	(req, res) ->
+		res.redirect('/account');
 
 #sockets on connection
 io.sockets.on 'connection', (socket) ->
@@ -181,7 +185,7 @@ io.sockets.on 'connection', (socket) ->
 			else
 				console.log 'iss', issue
 
-  			#Send an SMS text message via Twilio
+				#Send an SMS text message via Twilio
 				client.sendMessage {
 					to:'+16145519436',
 					from: '+13036256825',
@@ -374,4 +378,4 @@ app.get '/builtwith', (req, res) ->
 
 #get and listen to server
 server.listen(app.get('port'), () ->
-  console.log 'Express server listening on port ' + app.get('port'))
+	console.log 'Express server listening on port ' + app.get('port'))
