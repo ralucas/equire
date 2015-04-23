@@ -6,19 +6,19 @@
     "start": "node app.js"
   },
   "dependencies": {
+    "connect": "~2.11.0",
     "express": "3.4.0",
     "jade": "*",
-    "passport": "~0.1.17",
-    "twilio": "~1.4.0",
-    "connect": "~2.11.0",
-    "socket.io": "~0.9.16",
     "moment": "~2.4.0",
-    "mongoose": "~3.8.0",
-    "passport-google": "~0.3.0",
-    "underscore": "~1.5.2",
-    "ws": "~0.4.31",
     "moment-timezone": "0.0.3",
-    "passport-google-oauth": "~0.1.5",
-    "strong-agent": "~0.2.19"
+    "mongoose": "~3.8.0",
+    "passport": "^0.2.1",
+    "passport-google": "^0.3.0",
+    "passport-google-oauth": "^0.2.0",
+    "socket.io": "~0.9.16",
+    "strong-agent": "~0.2.19",
+    "twilio": "~1.4.0",
+    "underscore": "~1.5.2",
+    "ws": "~0.4.31"
   }
 }

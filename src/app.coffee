@@ -1,5 +1,4 @@
 # Module dependencies.
-require('strong-agent').profile()
 express = require 'express'
 routes = require './../routes'
 http = require 'http'
@@ -10,8 +9,8 @@ socketio = require 'socket.io'
 mongoose = require 'mongoose'
 moment = require 'moment'
 passport = require 'passport'
-GoogleStrategy = require('passport-google').Strategy
-GoogleOauthStrategy = require('passport-google-oauth').OAuthStrategy
+#GoogleStrategy = require('passport-google').Strategy
+GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
 client = require('twilio')('ACe1b7313b5b376f66c4db568dfa97e3e9', '1a3442ad88426e0561ed5d4fd4ae71e1')
 sys = require 'sys'
 childProcess = require 'child_process'
@@ -21,7 +20,41 @@ momentTZ = require 'moment-timezone'
 
 app = express()
 
-#all environments
+#instantiate the User database
+UserSchema = new mongoose.Schema {
+	openId: String,
+	displayName: String,
+	emails: String,
+	isTeacher: Boolean
+}
+
+User = mongoose.model 'User', UserSchema
+
+passport.serializeUser (user, done) ->
+	done null, user
+
+passport.deserializeUser (obj, done) ->
+	done null, obj
+
+passport.use new GoogleStrategy {
+	clientID: "1011347908775-9mh5kvjs34j8mcssgu0c7k4qqhqpptv5.apps.googleusercontent.com",
+	clientSecret: "W7nqydtlJfuOp9m41Ul9hGmy",
+	callbackURL: ip+"/auth/google/callback"
+	},
+	(accesstoken, refreshToken, profile, done) ->
+		process.nextTick () ->
+			User.find {emails: profile.emails[0]['value']}, (err, user) ->
+				if !user.length
+					User.create {
+						openId: identifier,
+						displayName: profile.displayName,
+						emails: profile.emails[0]['value'],
+						isTeacher: true
+					}, (err, user) ->
+						done err, user
+				else
+					done err, user[0]
+
 app.set 'port', process.env.PORT || 3001
 app.set 'views', __dirname + './../views'
 app.set 'view engine', 'jade'
@@ -87,15 +120,6 @@ IssueSchema.pre 'save', (next) ->
 
 Issue = mongoose.model 'Issue', IssueSchema
 
-#instantiate the User database
-UserSchema = new mongoose.Schema {
-	openId: String,
-	displayName: String,
-	emails: String,
-	isTeacher: Boolean
-}
-
-User = mongoose.model 'User', UserSchema
 
 #instantiate the Lesson database
 LessonSchema = new mongoose.Schema {
@@ -122,65 +146,14 @@ Lesson = mongoose.model 'Lesson', LessonSchema
 ip = process.env.IP ? local
 #heroku config:add IP=http://intense-dawn-1429.herokuapp.com
 
-passport.serializeUser (user, done) ->
-	done null, user
+app.get '/auth/google', 
+  passport.authenticate('google', { scope: 'https://www.googleapis.com/auth/plus.login' }),
+  (req, res) ->
 
-passport.deserializeUser (obj, done) ->
-	done null, obj
-
-passport.use new GoogleStrategy {
-	returnURL: ip+'/auth/google/return',
-	realm: ip
-	},
-	(identifier, profile, done) ->
-		process.nextTick () ->
-			User.find {emails: profile.emails[0]['value']}, (err, user) ->
-				if !user.length
-					User.create {
-						openId: identifier,
-						displayName: profile.displayName,
-						emails: profile.emails[0]['value'],
-						isTeacher: true
-					}, (err, user) ->
-						done err, user
-				else
-					done err, user[0]
-
-###
-#Google Oath
-passport.use new GoogleOauthStrategy {
-	clientID: 1011347908775-9mh5kvjs34j8mcssgu0c7k4qqhqpptv5.apps.googleusercontent.com,
-	clientSecret: W7nqydtlJfuOp9m41Ul9hGmy,
-	callbackURL: ip+"/auth/google/callback"
-	},
-	(accesstoken, refreshToken, profile, done) ->
-		process.nextTick () ->
-			User.find {emails: profile.emails[0]['value']}, (err, user) ->
-				if !user.length
-					User.create {
-						openId: identifier,
-						displayName: profile.displayName,
-						emails: profile.emails[0]['value'],
-						isTeacher: true
-					}, (err, user) ->
-						done err, user
-				else
-					done err, user[0]
-###
-
-app.get '/auth/google', passport.authenticate 'google'
-
-app.get '/auth/google/return', passport.authenticate 'google', {
-	session: true,
-	successRedirect: '/account',
-	failureRedirect: '/'}
-
-###
-app.get '/auth/google/callback', passport.authenticate 'google', {
-	session: true,
-	successRedirect: '/account',
-	failureRedirect: '/'}
-###
+app.get '/auth/google/callback', 
+  passport.authenticate('google', { failureRedirect: '/' }),
+  (req, res) ->
+    res.redirect('/account');
 
 #sockets on connection
 io.sockets.on 'connection', (socket) ->
@@ -206,25 +179,8 @@ io.sockets.on 'connection', (socket) ->
 				console.log 'errror'
 			else
 				console.log 'iss', issue
-				###
-				childProcess.exec('~/linkm/./linkm-tool --on', 
-					(error, stdout, stderr) ->
-						console.log 'stdout: ' + stdout
-						console.log 'stderr: ' + stderr
-						if error isnt null
-							console.log 'exec error: ' + error
-					)
-				setTimeout () ->
-					childProcess.exec('~/linkm/./linkm-tool --off', 
-						(error, stdout, stderr) ->
-							console.log 'stdout: ' + stdout
-							console.log 'stderr: ' + stderr
-							if error isnt null
-								console.log 'exec error: ' + error
-						)
-				, 5000
-				###
-				#Send an SMS text message via Twilio
+
+  			#Send an SMS text message via Twilio
 				client.sendMessage {
 					to:'+16145519436',
 					from: '+13036256825',
