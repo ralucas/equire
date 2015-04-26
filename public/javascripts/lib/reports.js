@@ -82,11 +82,12 @@ Reports for Teacher Side
       return totalsTable(totalsObj);
     };
     totalsTable = function(obj) {
-      $('#summaryBody').empty();
-      $('#summaryBody').append('<tr class="summaryRow">' + '<td>' + obj['totalIssues'] + '</td>' + '<td>' + obj['avgWait'] + '</td>' + '<td>' + _.keys(obj['mostDate']).join() + '</td>' + '<td>' + _.keys(obj['mostDay']).join() + '</td>' + '<td>' + obj['mostTerm'] + '</td>' + '<td>' + obj['mostComm'] + '</td>' + '<td>' + obj['mostStudent'] + '</td>' + '</tr>');
-      $('#summaryHeaders').find('.date-thead').text('Date with Most Requests: ' + _.values(obj['mostDate']).join());
-      return $('#summaryHeaders').find('.day-thead').text('Day with Most Requests: ' + _.values(obj['mostDay']).join());
+      return console.log(obj);
     };
+    $('#summaryBody').empty();
+    $('#summaryBody').append('<tr class="summaryRow">' + '<td>' + obj['totalIssues'] + '</td>' + '<td>' + obj['avgWait'] + '</td>' + '<td>' + _.keys(obj['mostDate']).join() + '</td>' + '<td>' + _.keys(obj['mostDay']).join() + '</td>' + '<td>' + obj['mostTerm'] + '</td>' + '<td>' + obj['mostComm'] + '</td>' + '<td>' + obj['mostStudent'] + '</td>' + '</tr>');
+    $('#summaryHeaders').find('.date-thead').text('Date with Most Requests: ' + _.values(obj['mostDate']).join());
+    $('#summaryHeaders').find('.day-thead').text('Day with Most Requests: ' + _.values(obj['mostDay']).join());
     $.get('/reportsInfo', function(data) {
       issueData = data;
       buildTable(issueData);
