@@ -79,7 +79,6 @@ $ () ->
 
 	#builds totals table on page
 	totalsTable = (obj) ->
-    console.log(obj)
 		$('#summaryBody').empty()
 		$('#summaryBody').append('<tr class="summaryRow">'+
 			'<td>'+obj['totalIssues']+'</td>'+
